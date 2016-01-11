@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <errno.h>
 #include <getopt.h>
@@ -40,8 +41,10 @@
 #endif
 
 #ifdef OSX
+#include <stdarg.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+#include <mach-o/dyld.h>
 #endif
 
 typedef void     *HM_LIB;

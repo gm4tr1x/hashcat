@@ -3,6 +3,7 @@
  * License.....: MIT
  */
 
+#include <stdio.h>
 #include <shared.h>
 #include <limits.h>
 
@@ -2633,6 +2634,7 @@ void fsync (int fd)
  * thermal
  */
 
+#ifndef OSX
 #ifdef _WIN
 int hm_get_adapter_index_nv (HM_ADAPTER_NV nvGPUHandle[DEVICES_MAX])
 {
@@ -3249,6 +3251,7 @@ int hm_set_fanspeed_with_device_id_amd (const uint device_id, const int fanspeed
 
   return -1;
 }
+#endif // OSX
 
 /**
  * maskprocessor
@@ -4094,6 +4097,16 @@ char *get_exec_path ()
 
   #endif
 
+  #ifdef OSX
+  uint32_t size = exec_path_len;
+  if (_NSGetExecutablePath (exec_path, &size) != 0)
+  {
+    log_error("! executable path buffer too small\n");
+    exit (-1);
+  }
+  const int len = strlen (exec_path);
+  #endif
+
   exec_path[len] = 0;
 
   return exec_path;
@@ -4453,7 +4466,7 @@ int sort_by_dictstat (const void *s1, const void *s2)
   dictstat_t *d1 = (dictstat_t *) s1;
   dictstat_t *d2 = (dictstat_t *) s2;
 
-  #ifdef _POSIX
+  #ifndef _POSIX
   d2->stat.st_atim = d1->stat.st_atim;
   #else
   d2->stat.st_atime = d1->stat.st_atime;
@@ -4816,7 +4829,7 @@ void format_output (FILE *out_fp, char *out_buf, unsigned char *plain_ptr, const
 
     #ifdef _POSIX
     #ifdef __x86_64__
-    fprintf (out_fp, "%lu", crackpos);
+    fprintf (out_fp, "%lu", (unsigned long) crackpos);
     #else
     fprintf (out_fp, "%llu", crackpos);
     #endif

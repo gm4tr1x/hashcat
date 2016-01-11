@@ -7,11 +7,6 @@
 #define EXT_ADL_H
 
 #include <common.h>
-
-// this is ugly but ADL requires the bool datatype
-
-typedef int bool;
-
 #include <adl_sdk.h>
 
 typedef int HM_ADAPTER_AMD;

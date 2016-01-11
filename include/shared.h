@@ -1671,6 +1671,7 @@ void logfile_append (const char *fmt, ...);
 void fsync (int fd);
 #endif
 
+#ifndef OSX
 int hm_get_adapter_index_nv (HM_ADAPTER_NV nvGPUHandle[DEVICES_MAX]);
 
 int get_adapters_num_amd (HM_LIB hm_dll, int *iNumberAdapters);
@@ -1697,6 +1698,7 @@ int hm_get_fanspeed_with_device_id    (const uint device_id);
 int hm_get_utilization_with_device_id (const uint device_id);
 
 int hm_set_fanspeed_with_device_id_amd (const uint device_id, const int fanspeed);
+#endif
 
 void myabort ();
 void myquit ();
@@ -1900,8 +1902,6 @@ void sigHandler_benchmark (int sig);
 void hc_signal (void c (int));
 
 #endif
-
-typedef int bool;
 
 bool class_num   (char c);
 bool class_lower (char c);

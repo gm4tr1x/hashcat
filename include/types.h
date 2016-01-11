@@ -239,7 +239,7 @@ typedef struct
   {
     uint dgst32[16];
     u64  dgst64[8];
-  };
+  } d;
 
   uint  dgst_len;
   uint  W_len;
@@ -694,7 +694,7 @@ typedef struct
     uint8_t   hc1[1][256];
     uint32_t  hi1[1][ 64];
     uint64_t  hl1[1][ 32];
-  };
+  } h;
 
   uint pw_len;
   uint alignment_placeholder_1;
@@ -969,6 +969,7 @@ struct __hc_device_param
 
 typedef struct __hc_device_param hc_device_param_t;
 
+#ifndef OSX
 typedef struct
 {
   union {
@@ -984,6 +985,7 @@ typedef struct
   // int devid; // used for CL_DEVICE_TOPOLOGY_AMD but broken for dual GPUs
 
 } hm_attrs_t;
+#endif
 
 typedef struct
 {
@@ -1030,12 +1032,14 @@ typedef struct
   int                 rule_len_l;
   int                 rule_len_r;
 
+  #ifndef OSX
   /**
    * hardware watchdog
    */
 
   HM_LIB              hm_dll;
   hm_attrs_t          hm_device[DEVICES_MAX];
+  #endif
 
   /**
    * hashes

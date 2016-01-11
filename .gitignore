@@ -1,6 +1,7 @@
 *.exe
 *.bin
 *.app
+*.app.dSYM
 oclHashcat
 *.restore
 *.dictstat

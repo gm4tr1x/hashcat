@@ -18,6 +18,7 @@
 #endif
 
 #ifdef LINUX
+//#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
 #include <CL/cl.h>
 // #include <CL/cl_ext.h> // used for CL_DEVICE_TOPOLOGY_AMD but broken for dual GPU
 #endif

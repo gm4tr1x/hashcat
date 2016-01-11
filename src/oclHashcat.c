@@ -3,6 +3,7 @@
  * License.....: MIT
  */
 
+#include <stdio.h>
 #include <common.h>
 #include <shared.h>
 #include <rp_kernel_on_cpu.h>
@@ -828,6 +829,7 @@ void status_display_automat ()
   fprintf (out, "RECHASH\t%u\t%u\t", data.digests_done, data.digests_cnt);
   fprintf (out, "RECSALT\t%u\t%u\t", data.salts_done,   data.salts_cnt);
 
+  #if !defined(OSX)
   /**
    * temperature
    */
@@ -847,6 +849,7 @@ void status_display_automat ()
 
     hc_thread_mutex_unlock (mux_adl);
   }
+  #endif
 
   #ifdef _WIN
   fputc ('\r', out);
@@ -1486,6 +1489,7 @@ void status_display ()
     }
   }
 
+  #if !defined(OSX)
   if (data.gpu_temp_disable == 0)
   {
     hc_thread_mutex_lock (mux_adl);
@@ -1523,9 +1527,10 @@ void status_display ()
 
     hc_thread_mutex_unlock (mux_adl);
   }
+  #endif
 }
 
-static void status_benchmark ()
+void status_benchmark ()
 {
   if (data.devices_status == STATUS_INIT) return;
   if (data.devices_status == STATUS_STARTING) return;
@@ -1598,7 +1603,7 @@ static void status_benchmark ()
  * oclHashcat -only- functions
  */
 
-static void generate_source_kernel_filename (const uint attack_exec, const uint attack_kern, const uint kern_type, char *shared_dir, char *source_file)
+void generate_source_kernel_filename (const uint attack_exec, const uint attack_kern, const uint kern_type, char *shared_dir, char *source_file)
 {
   if (attack_exec == ATTACK_EXEC_INSIDE_KERNEL)
   {
@@ -1613,7 +1618,7 @@ static void generate_source_kernel_filename (const uint attack_exec, const uint 
     snprintf (source_file, 255, "%s/OpenCL/m%05d.cl", shared_dir, (int) kern_type);
 }
 
-static void generate_cached_kernel_filename (const uint attack_exec, const uint attack_kern, const uint kern_type, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
+void generate_cached_kernel_filename (const uint attack_exec, const uint attack_kern, const uint kern_type, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
 {
   if (attack_exec == ATTACK_EXEC_INSIDE_KERNEL)
   {
@@ -1630,7 +1635,7 @@ static void generate_cached_kernel_filename (const uint attack_exec, const uint 
   }
 }
 
-static void generate_source_kernel_mp_filename (const uint opti_type, const uint opts_type, char *shared_dir, char *source_file)
+void generate_source_kernel_mp_filename (const uint opti_type, const uint opts_type, char *shared_dir, char *source_file)
 {
   if ((opti_type & OPTI_TYPE_BRUTE_FORCE) && (opts_type & OPTS_TYPE_PT_GENERATE_BE))
   {
@@ -1642,7 +1647,7 @@ static void generate_source_kernel_mp_filename (const uint opti_type, const uint
   }
 }
 
-static void generate_cached_kernel_mp_filename (const uint opti_type, const uint opts_type, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
+void generate_cached_kernel_mp_filename (const uint opti_type, const uint opts_type, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
 {
   if ((opti_type & OPTI_TYPE_BRUTE_FORCE) && (opts_type & OPTS_TYPE_PT_GENERATE_BE))
   {
@@ -1654,17 +1659,17 @@ static void generate_cached_kernel_mp_filename (const uint opti_type, const uint
   }
 }
 
-static void generate_source_kernel_amp_filename (const uint attack_kern, char *shared_dir, char *source_file)
+void generate_source_kernel_amp_filename (const uint attack_kern, char *shared_dir, char *source_file)
 {
   snprintf (source_file, 255, "%s/OpenCL/amp_a%d.cl", shared_dir, attack_kern);
 }
 
-static void generate_cached_kernel_amp_filename (const uint attack_kern, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
+void generate_cached_kernel_amp_filename (const uint attack_kern, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
 {
   snprintf (cached_file, 255, "%s/kernels/%d/amp_a%d.%s.kernel", profile_dir, vendor_id, attack_kern, device_name_chksum);
 }
 
-static uint convert_from_hex (char *line_buf, const uint line_len)
+uint convert_from_hex (char *line_buf, const uint line_len)
 {
   if (line_len & 1) return (line_len); // not in hex
 
@@ -1707,7 +1712,7 @@ static uint convert_from_hex (char *line_buf, const uint line_len)
   return (line_len);
 }
 
-static uint count_lines (FILE *fd)
+uint count_lines (FILE *fd)
 {
   uint cnt = 0;
 
@@ -1755,7 +1760,7 @@ static uint count_lines (FILE *fd)
   return cnt;
 }
 
-static void clear_prompt ()
+void clear_prompt ()
 {
   fputc ('\r', stdout);
 
@@ -1769,12 +1774,12 @@ static void clear_prompt ()
   fflush (stdout);
 }
 
-static void gidd_to_pw_t (hc_device_param_t *device_param, const uint64_t gidd, pw_t *pw)
+void gidd_to_pw_t (hc_device_param_t *device_param, const uint64_t gidd, pw_t *pw)
 {
   hc_clEnqueueReadBuffer (device_param->command_queue, device_param->d_pws_buf, CL_TRUE, gidd * sizeof (pw_t), sizeof (pw_t), pw, 0, NULL, NULL);
 }
 
-static void check_hash (hc_device_param_t *device_param, const uint salt_pos, const uint digest_pos)
+void check_hash (hc_device_param_t *device_param, const uint salt_pos, const uint digest_pos)
 {
   char *outfile    = data.outfile;
   uint  quiet      = data.quiet;
@@ -1824,7 +1829,7 @@ static void check_hash (hc_device_param_t *device_param, const uint salt_pos, co
 
     for (int i = 0, j = gidm; i < 16; i++, j++)
     {
-      plain_buf[i] = pw.hi1[0][j];
+      plain_buf[i] = pw.h.hi1[0][j];
     }
 
     plain_len = pw.pw_len;
@@ -1873,7 +1878,7 @@ static void check_hash (hc_device_param_t *device_param, const uint salt_pos, co
 
     for (int i = 0, j = gidm; i < 16; i++, j++)
     {
-      plain_buf[i] = pw.hi1[0][j];
+      plain_buf[i] = pw.h.hi1[0][j];
     }
 
     plain_len = pw.pw_len;
@@ -1934,7 +1939,7 @@ static void check_hash (hc_device_param_t *device_param, const uint salt_pos, co
 
     for (int i = 0, j = gidm; i < 16; i++, j++)
     {
-      plain_buf[i] = pw.hi1[0][j];
+      plain_buf[i] = pw.h.hi1[0][j];
     }
 
     plain_len = pw.pw_len;
@@ -1968,7 +1973,7 @@ static void check_hash (hc_device_param_t *device_param, const uint salt_pos, co
 
     for (int i = 0, j = gidm; i < 16; i++, j++)
     {
-      plain_buf[i] = pw.hi1[0][j];
+      plain_buf[i] = pw.h.hi1[0][j];
     }
 
     plain_len = pw.pw_len;
@@ -2112,7 +2117,7 @@ static void check_hash (hc_device_param_t *device_param, const uint salt_pos, co
   }
 }
 
-static void check_cracked (hc_device_param_t *device_param, const uint salt_pos)
+void check_cracked (hc_device_param_t *device_param, const uint salt_pos)
 {
   salt_t *salt_buf = &data.salts_buf[salt_pos];
 
@@ -2192,7 +2197,7 @@ static void check_cracked (hc_device_param_t *device_param, const uint salt_pos)
   }
 }
 
-static void save_hash ()
+void save_hash ()
 {
   char *hashfile = data.hashfile;
 
@@ -2289,7 +2294,7 @@ static void save_hash ()
   unlink (old_hashfile);
 }
 
-static float find_kernel_blocks_div (const uint64_t total_left, const uint kernel_blocks_all)
+float find_kernel_blocks_div (const uint64_t total_left, const uint kernel_blocks_all)
 {
   // function called only in case kernel_blocks_all > words_left)
 
@@ -2326,7 +2331,7 @@ static float find_kernel_blocks_div (const uint64_t total_left, const uint kerne
   return kernel_blocks_div;
 }
 
-static void run_kernel (const uint kern_run, hc_device_param_t *device_param, const uint num)
+void run_kernel (const uint kern_run, hc_device_param_t *device_param, const uint num)
 {
   uint num_elements = num;
 
@@ -2381,7 +2386,7 @@ static void run_kernel (const uint kern_run, hc_device_param_t *device_param, co
   hc_clFinish (device_param->command_queue);
 }
 
-static void run_kernel_mp (const uint kern_run, hc_device_param_t *device_param, const uint num)
+void run_kernel_mp (const uint kern_run, hc_device_param_t *device_param, const uint num)
 {
   uint num_elements = num;
 
@@ -2444,7 +2449,7 @@ static void run_kernel_mp (const uint kern_run, hc_device_param_t *device_param,
   hc_clFinish (device_param->command_queue);
 }
 
-static void run_kernel_tb (hc_device_param_t *device_param, const uint num)
+void run_kernel_tb (hc_device_param_t *device_param, const uint num)
 {
   uint num_elements = num;
 
@@ -2464,7 +2469,7 @@ static void run_kernel_tb (hc_device_param_t *device_param, const uint num)
   hc_clFinish (device_param->command_queue);
 }
 
-static void run_kernel_tm (hc_device_param_t *device_param)
+void run_kernel_tm (hc_device_param_t *device_param)
 {
   const uint num_elements = 1024; // fixed
 
@@ -2482,7 +2487,7 @@ static void run_kernel_tm (hc_device_param_t *device_param)
   hc_clFinish (device_param->command_queue);
 }
 
-static void run_kernel_amp (hc_device_param_t *device_param, const uint num)
+void run_kernel_amp (hc_device_param_t *device_param, const uint num)
 {
   uint num_elements = num;
 
@@ -2511,7 +2516,7 @@ static void run_kernel_amp (hc_device_param_t *device_param, const uint num)
   hc_clFinish (device_param->command_queue);
 }
 
-static void run_kernel_bzero (hc_device_param_t *device_param, cl_mem buf, const uint size)
+void run_kernel_bzero (hc_device_param_t *device_param, cl_mem buf, const uint size)
 {
   if (data.vendor_id == VENDOR_ID_AMD)
   {
@@ -2553,7 +2558,7 @@ static void run_kernel_bzero (hc_device_param_t *device_param, cl_mem buf, const
   }
 }
 
-static int run_rule_engine (const int rule_len, const char *rule_buf)
+int run_rule_engine (const int rule_len, const char *rule_buf)
 {
   if (rule_len == 0)
   {
@@ -2567,7 +2572,7 @@ static int run_rule_engine (const int rule_len, const char *rule_buf)
   return 1;
 }
 
-static void run_copy (hc_device_param_t *device_param, const uint pws_cnt)
+void run_copy (hc_device_param_t *device_param, const uint pws_cnt)
 {
   if (data.attack_kern == ATTACK_KERN_STRAIGHT)
   {
@@ -2587,8 +2592,14 @@ static void run_copy (hc_device_param_t *device_param, const uint pws_cnt)
   }
 }
 
-static void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint pws_cnt)
+void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint pws_cnt)
 {
+  if (data.force == 0)
+  {
+    log_info("WARNING: It's not safe run OSX kernel before internal testing. Use --force for skip.\n");
+    exit (-1);
+  }
+
   const uint kernel_loops = data.kernel_loops;
 
   // init speed timer
@@ -2968,7 +2979,7 @@ static void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, con
   device_param->speed_pos = speed_pos;
 }
 
-static void load_segment (wl_data_t *wl_data, FILE *fd)
+void load_segment (wl_data_t *wl_data, FILE *fd)
 {
   // NOTE: use (never changing) ->incr here instead of ->avail otherwise the buffer gets bigger and bigger
 
@@ -3014,7 +3025,7 @@ static void load_segment (wl_data_t *wl_data, FILE *fd)
   return;
 }
 
-static void get_next_word_lm (char *buf, uint32_t sz, uint32_t *len, uint32_t *off)
+void get_next_word_lm (char *buf, uint32_t sz, uint32_t *len, uint32_t *off)
 {
   char *ptr = buf;
 
@@ -3045,7 +3056,7 @@ static void get_next_word_lm (char *buf, uint32_t sz, uint32_t *len, uint32_t *o
   *len = sz;
 }
 
-static void get_next_word_uc (char *buf, uint32_t sz, uint32_t *len, uint32_t *off)
+void get_next_word_uc (char *buf, uint32_t sz, uint32_t *len, uint32_t *off)
 {
   char *ptr = buf;
 
@@ -3068,7 +3079,7 @@ static void get_next_word_uc (char *buf, uint32_t sz, uint32_t *len, uint32_t *o
   *len = sz;
 }
 
-static void get_next_word_std (char *buf, uint32_t sz, uint32_t *len, uint32_t *off)
+void get_next_word_std (char *buf, uint32_t sz, uint32_t *len, uint32_t *off)
 {
   char *ptr = buf;
 
@@ -3089,7 +3100,7 @@ static void get_next_word_std (char *buf, uint32_t sz, uint32_t *len, uint32_t *
   *len = sz;
 }
 
-static void get_next_word (wl_data_t *wl_data, FILE *fd, char **out_buf, uint *out_len)
+void get_next_word (wl_data_t *wl_data, FILE *fd, char **out_buf, uint *out_len)
 {
   while (wl_data->pos < wl_data->cnt)
   {
@@ -3151,12 +3162,10 @@ static void get_next_word (wl_data_t *wl_data, FILE *fd, char **out_buf, uint *o
   get_next_word (wl_data, fd, out_buf, out_len);
 }
 
-#ifdef _POSIX
-static uint64_t count_words (wl_data_t *wl_data, FILE *fd, char *dictfile, dictstat_t *dictstat_base, size_t *dictstat_nmemb)
-#endif
-
-#ifdef _WIN
-static uint64_t count_words (wl_data_t *wl_data, FILE *fd, char *dictfile, dictstat_t *dictstat_base, uint *dictstat_nmemb)
+#ifdef WIN
+uint64_t count_words (wl_data_t *wl_data, FILE *fd, char *dictfile, dictstat_t *dictstat_base, uint *dictstat_nmemb)
+#else
+uint64_t count_words (wl_data_t *wl_data, FILE *fd, char *dictfile, dictstat_t *dictstat_base, size_t *dictstat_nmemb)
 #endif
 {
   hc_signal (NULL);
@@ -3300,12 +3309,12 @@ static uint64_t count_words (wl_data_t *wl_data, FILE *fd, char *dictfile, dicts
   return (cnt);
 }
 
-static void pw_transpose_to_hi1 (const pw_t *p1, pw_t *p2)
+void pw_transpose_to_hi1 (const pw_t *p1, pw_t *p2)
 {
-  memcpy (p2->hi1, p1->hi1, 64 * sizeof (uint));
+  memcpy (p2->h.hi1, p1->h.hi1, 64 * sizeof (uint));
 }
 
-static uint pw_add_to_hc1 (hc_device_param_t *device_param, const uint8_t *pw_buf, const uint pw_len)
+uint pw_add_to_hc1 (hc_device_param_t *device_param, const uint8_t *pw_buf, const uint pw_len)
 {
   if (data.devices_status == STATUS_BYPASS) return 0;
 
@@ -3313,7 +3322,7 @@ static uint pw_add_to_hc1 (hc_device_param_t *device_param, const uint8_t *pw_bu
 
   uint cache_cnt = pw_cache->cnt;
 
-  uint8_t *pw_hc1 = pw_cache->pw_buf.hc1[cache_cnt];
+  uint8_t *pw_hc1 = pw_cache->pw_buf.h.hc1[cache_cnt];
 
   memcpy (pw_hc1, pw_buf, pw_len);
 
@@ -3341,7 +3350,7 @@ static uint pw_add_to_hc1 (hc_device_param_t *device_param, const uint8_t *pw_bu
   return pws_cnt;
 }
 
-static void *thread_monitor (void *p)
+void *thread_monitor (void *p)
 {
   uint runtime_check = 0;
   uint remove_check  = 0;
@@ -3353,6 +3362,7 @@ static void *thread_monitor (void *p)
   uint remove_left  = data.remove_timer;
   uint status_left  = data.status_timer;
 
+  #if !defined(OSX)
   // these variables are mainly used for fan control (AMD only)
 
   int *fan_speed_chgd = (int *) mycalloc (data.devices_cnt, sizeof (int));
@@ -3366,6 +3376,7 @@ static void *thread_monitor (void *p)
 
   int fan_speed_min =  15; // in percentage
   int fan_speed_max = 100;
+  #endif
 
   time_t last_temp_check_time;
 
@@ -3409,6 +3420,7 @@ static void *thread_monitor (void *p)
 
     if (data.devices_status != STATUS_RUNNING) continue;
 
+    #if !defined(OSX)
     if (hwmon_check == 1)
     {
       hc_thread_mutex_lock (mux_adl);
@@ -3492,6 +3504,7 @@ static void *thread_monitor (void *p)
 
       hc_thread_mutex_unlock (mux_adl);
     }
+    #endif
 
     if (restore_check == 1)
     {
@@ -3564,17 +3577,19 @@ static void *thread_monitor (void *p)
     }
   }
 
+  #if !defined(OSX)
   myfree (fan_speed_chgd);
 
   myfree (temp_diff_old);
   myfree (temp_diff_sum);
+  #endif
 
   p = NULL;
 
   return (p);
 }
 
-static void *thread_outfile_remove (void *p)
+void *thread_outfile_remove (void *p)
 {
   // some hash-dependent constants
   char *outfile_dir = data.outfile_check_directory;
@@ -3887,7 +3902,7 @@ static void *thread_outfile_remove (void *p)
   return (p);
 }
 
-static uint get_work (hc_device_param_t *device_param, const uint64_t max)
+uint get_work (hc_device_param_t *device_param, const uint64_t max)
 {
   hc_thread_mutex_lock (mux_dispatcher);
 
@@ -3934,7 +3949,7 @@ static uint get_work (hc_device_param_t *device_param, const uint64_t max)
   return work;
 }
 
-static void *thread_calc_stdin (void *p)
+void *thread_calc_stdin (void *p)
 {
   hc_device_param_t *device_param = (hc_device_param_t *) p;
 
@@ -4148,7 +4163,7 @@ static void *thread_calc_stdin (void *p)
   return NULL;
 }
 
-static void *thread_calc (void *p)
+void *thread_calc (void *p)
 {
   hc_device_param_t *device_param = (hc_device_param_t *) p;
 
@@ -4171,6 +4186,7 @@ static void *thread_calc (void *p)
 
       device_param->pw_cnt  = pw_cnt;
       device_param->pws_cnt = pws_cnt;
+
 
       if (pws_cnt)
       {
@@ -4515,7 +4531,7 @@ static void *thread_calc (void *p)
   return NULL;
 }
 
-static void weak_hash_check (hc_device_param_t *device_param, const uint salt_pos, const uint kernel_loops)
+void weak_hash_check (hc_device_param_t *device_param, const uint salt_pos, const uint kernel_loops)
 {
   salt_t *salt_buf = &data.salts_buf[salt_pos];
 
@@ -4594,7 +4610,7 @@ static void weak_hash_check (hc_device_param_t *device_param, const uint salt_po
 
 // hlfmt hashcat
 
-static void hlfmt_hash_hashcat (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
+void hlfmt_hash_hashcat (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
 {
   if (data.username == 0)
   {
@@ -4623,7 +4639,7 @@ static void hlfmt_hash_hashcat (char line_buf[BUFSIZ], int line_len, char **hash
   }
 }
 
-static void hlfmt_user_hashcat (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
+void hlfmt_user_hashcat (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
 {
   char *pos = NULL;
   int   len = 0;
@@ -4653,7 +4669,7 @@ static void hlfmt_user_hashcat (char line_buf[BUFSIZ], int line_len, char **user
 
 // hlfmt pwdump
 
-static int hlfmt_detect_pwdump (char line_buf[BUFSIZ], int line_len)
+int hlfmt_detect_pwdump (char line_buf[BUFSIZ], int line_len)
 {
   int sep_cnt = 0;
 
@@ -4678,7 +4694,7 @@ static int hlfmt_detect_pwdump (char line_buf[BUFSIZ], int line_len)
   return 0;
 }
 
-static void hlfmt_hash_pwdump (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
+void hlfmt_hash_pwdump (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
 {
   char *pos = NULL;
   int   len = 0;
@@ -4718,7 +4734,7 @@ static void hlfmt_hash_pwdump (char line_buf[BUFSIZ], int line_len, char **hashb
   *hashbuf_len = len;
 }
 
-static void hlfmt_user_pwdump (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
+void hlfmt_user_pwdump (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
 {
   char *pos = NULL;
   int   len = 0;
@@ -4748,7 +4764,7 @@ static void hlfmt_user_pwdump (char line_buf[BUFSIZ], int line_len, char **userb
 
 // hlfmt passwd
 
-static int hlfmt_detect_passwd (char line_buf[BUFSIZ], int line_len)
+int hlfmt_detect_passwd (char line_buf[BUFSIZ], int line_len)
 {
   int sep_cnt = 0;
 
@@ -4773,7 +4789,7 @@ static int hlfmt_detect_passwd (char line_buf[BUFSIZ], int line_len)
   return 0;
 }
 
-static void hlfmt_hash_passwd (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
+void hlfmt_hash_passwd (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
 {
   char *pos = NULL;
   int   len = 0;
@@ -4801,7 +4817,7 @@ static void hlfmt_hash_passwd (char line_buf[BUFSIZ], int line_len, char **hashb
   *hashbuf_len = len;
 }
 
-static void hlfmt_user_passwd (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
+void hlfmt_user_passwd (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
 {
   char *pos = NULL;
   int   len = 0;
@@ -4831,7 +4847,7 @@ static void hlfmt_user_passwd (char line_buf[BUFSIZ], int line_len, char **userb
 
 // hlfmt shadow
 
-static int hlfmt_detect_shadow (char line_buf[BUFSIZ], int line_len)
+int hlfmt_detect_shadow (char line_buf[BUFSIZ], int line_len)
 {
   int sep_cnt = 0;
 
@@ -4845,19 +4861,19 @@ static int hlfmt_detect_shadow (char line_buf[BUFSIZ], int line_len)
   return 0;
 }
 
-static void hlfmt_hash_shadow (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
+void hlfmt_hash_shadow (char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
 {
   hlfmt_hash_passwd (line_buf, line_len, hashbuf_pos, hashbuf_len);
 }
 
-static void hlfmt_user_shadow (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
+void hlfmt_user_shadow (char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
 {
   hlfmt_user_passwd (line_buf, line_len, userbuf_pos, userbuf_len);
 }
 
 // hlfmt main
 
-static void hlfmt_hash (uint hashfile_format, char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
+void hlfmt_hash (uint hashfile_format, char line_buf[BUFSIZ], int line_len, char **hashbuf_pos, int *hashbuf_len)
 {
   switch (hashfile_format)
   {
@@ -4868,7 +4884,7 @@ static void hlfmt_hash (uint hashfile_format, char line_buf[BUFSIZ], int line_le
   }
 }
 
-static void hlfmt_user (uint hashfile_format, char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
+void hlfmt_user (uint hashfile_format, char line_buf[BUFSIZ], int line_len, char **userbuf_pos, int *userbuf_len)
 {
   switch (hashfile_format)
   {
@@ -4879,7 +4895,7 @@ static void hlfmt_user (uint hashfile_format, char line_buf[BUFSIZ], int line_le
   }
 }
 
-static uint hlfmt_detect (FILE *fp, uint max_check)
+uint hlfmt_detect (FILE *fp, uint max_check)
 {
   // Exception: those formats are wrongly detected as HLFMT_SHADOW, prevent it
 
@@ -4927,12 +4943,14 @@ static uint hlfmt_detect (FILE *fp, uint max_check)
 
 // wrapper around mymalloc for ADL
 
+#if !defined(OSX)
 void *__stdcall ADL_Main_Memory_Alloc (const int iSize)
 {
   return mymalloc (iSize);
 }
+#endif
 
-static uint generate_bitmaps (const uint digests_cnt, const uint dgst_size, const uint dgst_shifts, char *digests_buf_ptr, const uint bitmap_mask, const uint bitmap_size, uint *bitmap_a, uint *bitmap_b, uint *bitmap_c, uint *bitmap_d, const uint64_t collisions_max)
+uint generate_bitmaps (const uint digests_cnt, const uint dgst_size, const uint dgst_shifts, char *digests_buf_ptr, const uint bitmap_mask, const uint bitmap_size, uint *bitmap_a, uint *bitmap_b, uint *bitmap_c, uint *bitmap_d, const uint64_t collisions_max)
 {
   uint64_t collisions = 0;
 
@@ -5000,8 +5018,7 @@ int main (int argc, char **argv)
   }
   else
   {
-    if (getenv ("DISPLAY") == NULL)
-      putenv ((char *) "DISPLAY=:0");
+    if (getenv ("DISPLAY") == NULL) putenv ((char *) "DISPLAY=:0");
   }
 
   /*
@@ -12487,6 +12504,7 @@ int main (int argc, char **argv)
 
     int hm_adapters_all = devices_all_cnt;
 
+    #if !defined(OSX)
     hm_attrs_t hm_adapter_all[DEVICES_MAX];
 
     memset (hm_adapter_all, 0, sizeof (hm_adapter_all));
@@ -12597,6 +12615,7 @@ int main (int argc, char **argv)
         }
       }
     }
+    #endif
 
     if (hm_adapters_all == 0)
     {
@@ -12646,7 +12665,9 @@ int main (int argc, char **argv)
 
       devices[device_id] = devices_all[device_all_id];
 
+      #if !defined(OSX)
       memcpy (&data.hm_device[device_id], &hm_adapter_all[device_all_id], sizeof (hm_attrs_t));
+      #endif
 
       char device_name[INFOSZ];
 
@@ -12761,11 +12782,13 @@ int main (int argc, char **argv)
      * devices init
      */
 
+    #if !defined(OSX)
     int *temp_retain_fanspeed_value = (int *) mycalloc (devices_cnt, sizeof (int));
 
     ADLOD6MemClockState *od_clock_mem_status = (ADLOD6MemClockState *) mycalloc (devices_cnt, sizeof (ADLOD6MemClockState));
 
     int *od_power_control_status = (int *) mycalloc (devices_cnt, sizeof (int));
+    #endif
 
     hc_device_param_t *devices_param = (hc_device_param_t *) mycalloc (devices_cnt, sizeof (hc_device_param_t));
 
@@ -12963,6 +12986,7 @@ int main (int argc, char **argv)
     * Driver / ADL bug?
     */
 
+    #if !defined(OSX)
     if (vendor_id == VENDOR_ID_AMD)
     {
       if (powertune_enable == 1)
@@ -13011,6 +13035,7 @@ int main (int argc, char **argv)
         hc_thread_mutex_unlock (mux_adl);
       }
     }
+    #endif
 
     uint kernel_blocks_all = 0;
 
@@ -14225,6 +14250,7 @@ int main (int argc, char **argv)
        * Store initial fanspeed if gpu_temp_retain is enabled
        */
 
+      #if !defined(OSX)
       int gpu_temp_retain_set = 0;
 
       if (gpu_temp_disable == 0)
@@ -14395,6 +14421,7 @@ int main (int argc, char **argv)
 
         hc_thread_mutex_unlock (mux_adl);
       }
+      #endif
     }
 
     data.kernel_blocks_all = kernel_blocks_all;
@@ -16485,6 +16512,7 @@ int main (int argc, char **argv)
 
     // reset default fan speed
 
+    #if !defined(OSX)
     if (gpu_temp_disable == 0)
     {
       if (gpu_temp_retain != 0) // VENDOR_ID_AMD is implied here
@@ -16594,6 +16622,8 @@ int main (int argc, char **argv)
       }
       #endif
     }
+    #endif
+
 
     // free memory
 
@@ -16632,9 +16662,11 @@ int main (int argc, char **argv)
     local_free (bitmap_s2_c);
     local_free (bitmap_s2_d);
 
+    #if !defined(OSX)
     local_free (temp_retain_fanspeed_value);
     local_free (od_clock_mem_status);
     local_free (od_power_control_status);
+    #endif
 
     global_free (devices_param);
 

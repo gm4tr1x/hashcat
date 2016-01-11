@@ -11,7 +11,7 @@ oclHashcat build documentation
 
 To compile **oclHashcat** the following third party libraries are required:
 
-- ADL_SDK v8.0 ( http://developer.amd.com/tools-and-sdks/graphics-development/display-library-adl-sdk/ )
+- ADL_SDK v9.0 ( http://developer.amd.com/tools-and-sdks/graphics-development/display-library-adl-sdk/ )
 - NVAPI R352 ( https://developer.nvidia.com/nvapi )
 - GDK v352_55 ( https://developer.nvidia.com/gpu-deployment-kit )
 
@@ -19,7 +19,7 @@ The next thing to do is download all the third party libraries listed above and 
 
 The following files are needed inside the *deps/tmp* directory:
     
-    ADL_SDK8.zip
+    ADL_SDK9.zip
     R352-developer.zip
     gdk_linux_amd64_352_55_release.run
     
@@ -33,7 +33,7 @@ Install the dependencies
 
 ```sh
 $ cd oclHashcat
-$ sudo ./tools/deps.sh
+$ ./tools/deps.sh
 ```
 
 Run "make"
@@ -49,6 +49,16 @@ $ make install
 ```
 
 Useful tricks:
+- build native linux binaries
+```sh
+$ make native
+```
+
+- build native osx binaries
+```sh
+$ make native-osx
+```
+
 - build all binaries (see Note1 and Note2):
 ```sh
 $ make binaries
