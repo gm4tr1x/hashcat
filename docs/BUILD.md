@@ -1,7 +1,7 @@
 oclHashcat build documentation
 =
 # Revision:
-* 1.1
+* 1.2
 
 # Authors:
 * Gabriele Gristina <<matrix@hashcat.net>>
@@ -29,7 +29,7 @@ First get a copy of the **oclHashcat** repository
 ```sh
 $ git clone https://github.com/hashcat/oclHashcat.git
 ```
-Install the dependencies
+Install the dependencies (root permission needed)
 
 ```sh
 $ cd oclHashcat
