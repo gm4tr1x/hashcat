@@ -31,6 +31,12 @@ void hc_clGetEventInfo (cl_event event, cl_event_info param_name, size_t param_v
 
 void hc_clFlush (cl_command_queue command_queue)
 {
+  if (!command_queue)
+  {
+    log_error ("ERROR: command_queue is null\n");
+    exit (-1);
+  }
+
   cl_int CL_err = clFlush (command_queue);
 
   if (CL_err != CL_SUCCESS)
@@ -43,6 +49,13 @@ void hc_clFlush (cl_command_queue command_queue)
 
 void hc_clFinish (cl_command_queue command_queue)
 {
+  if (!command_queue)
+  {
+    log_error ("ERROR: command_queue is null\n");
+    exit (-1);
+  }
+
+  #if !defined(OSX)
   cl_int CL_err = clFinish (command_queue);
 
   if (CL_err != CL_SUCCESS)
@@ -51,6 +64,7 @@ void hc_clFinish (cl_command_queue command_queue)
 
     exit (-1);
   }
+  #endif
 }
 
 void hc_clSetKernelArg (cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value)

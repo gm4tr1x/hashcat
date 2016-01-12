@@ -2122,7 +2122,6 @@ void check_cracked (hc_device_param_t *device_param, const uint salt_pos)
   salt_t *salt_buf = &data.salts_buf[salt_pos];
 
   int found = 0;
-
   hc_clEnqueueReadBuffer (device_param->command_queue, device_param->d_result, CL_TRUE, 0, device_param->size_results, device_param->result, 0, NULL, NULL);
 
   for (uint i = 0; i < KERNEL_THREADS; i++) if (device_param->result[i] == 1) found = 1;
@@ -2594,12 +2593,6 @@ void run_copy (hc_device_param_t *device_param, const uint pws_cnt)
 
 void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint pws_cnt)
 {
-  if (data.force == 0)
-  {
-    log_info("WARNING: It's not safe run OSX kernel before internal testing. Use --force for skip.\n");
-    exit (-1);
-  }
-
   const uint kernel_loops = data.kernel_loops;
 
   // init speed timer
@@ -2652,7 +2645,7 @@ void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint
   uint innerloop_cnt  = 0;
 
   if      (data.attack_exec == ATTACK_EXEC_INSIDE_KERNEL)   innerloop_step = kernel_loops;
-  else                                               innerloop_step = 1;
+  else                                                      innerloop_step = 1;
 
   if      (data.attack_kern == ATTACK_KERN_STRAIGHT) innerloop_cnt  = data.kernel_rules_cnt;
   else if (data.attack_kern == ATTACK_KERN_COMBI)    innerloop_cnt  = data.combs_cnt;
@@ -11198,8 +11191,10 @@ int main (int argc, char **argv)
 
       if (benchmark_mode == 1)
       {
+        #if !defined(OSX)
         kernel_loops *= 8;
         kernel_accel *= 4;
+        #endif
 
         switch (hash_mode)
         {
@@ -12051,7 +12046,7 @@ int main (int argc, char **argv)
      * Some algorithm, like descrypt, can benefit from JIT compilation
      */
 
-    uint force_jit_compilation = 0;
+    uint force_jit_compilation = 1500;
 
     if (hash_mode == 8900)
     {
@@ -12440,6 +12435,20 @@ int main (int argc, char **argv)
       gpu_temp_retain = 0;
 
       data.gpu_temp_retain = gpu_temp_retain;
+    }
+    else if (strcmp (CL_platform_vendor, CL_VENDOR_APPLE) == 0)
+    {
+      if (force == 0)
+      {
+        log_error ("ATTENTION! OpenCL on OSX are known to be broken");
+        log_error ("You are STRONGLY encouraged not to use it");
+        log_error ("You can use --force to override this but do not post error reports if you do so");
+        return (-1);
+      }
+
+      vendor_id = VENDOR_ID_GENERIC;
+
+      device_type_filter = CL_DEVICE_TYPE_DEFAULT;
     }
     else if (strcmp (CL_platform_vendor, CL_VENDOR_POCL) == 0)
     {

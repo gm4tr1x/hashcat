@@ -4196,6 +4196,7 @@ void truecrypt_crc32 (char *file, unsigned char keytab[64])
 
 void set_cpu_affinity (char *cpu_affinity)
 {
+#if !defined(OSX)
   #ifdef WIN
   DWORD_PTR aff_mask = 0;
   #endif
@@ -4258,6 +4259,7 @@ void set_cpu_affinity (char *cpu_affinity)
   pthread_t thread = pthread_self ();
   pthread_setaffinity_np (thread, sizeof (cpu_set_t), &cpuset);
   #endif
+#endif
 }
 
 void *rulefind (const void *key, void *base, int nmemb, size_t size, int (*compar) (const void *, const void *))

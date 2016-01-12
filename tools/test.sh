@@ -273,22 +273,22 @@ function status()
       1)
         if contains ${hash_type} ${NEVER_CRACK_ALGOS}; then
 
-           echo "password not found, cmdline : ${CMD}" &>> ${OUTD}/logfull.txt
+           echo "password not found, cmdline : ${CMD}" >> ${OUTD}/logfull.txt
            ((e_nf++))
 
         fi
 
         ;;
       2)
-        echo "timeout reached, cmdline : ${CMD}" &>> ${OUTD}/logfull.txt
+        echo "timeout reached, cmdline : ${CMD}" >> ${OUTD}/logfull.txt
         ((e_to++))
 
         ;;
       10)
         if [ "${pass_only}" -eq 1 ]; then
-          echo "plains not found in output, cmdline : ${CMD}" &>> ${OUTD}/logfull.txt
+	  echo "plains not found in output, cmdline : ${CMD}" >> ${OUTD}/logfull.txt
         else
-          echo "hash:plains not matched in output, cmdline : ${CMD}" &>> ${OUTD}/logfull.txt
+          echo "hash:plains not matched in output, cmdline : ${CMD}" >> ${OUTD}/logfull.txt
         fi
         ((e_nm++))
 
@@ -320,7 +320,7 @@ function attack_0()
     e_nm=0
     cnt=0
 
-    echo "> Testing hash type $hash_type with attack mode 0, markov ${MARKOV}, single hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 0, markov ${MARKOV}, single hash." >> ${OUTD}/logfull.txt
 
     max=32
 
@@ -359,7 +359,7 @@ function attack_0()
 
       CMD="echo -n "${pass}" | ./${BIN} ${OPTS} -a 0 -m ${hash_type} '${hash}'"
 
-      echo -n "[ len $((i + 1)) ] " &>> ${OUTD}/logfull.txt
+      echo -n "[ len $((i + 1)) ] " >> ${OUTD}/logfull.txt
 
       output=$(echo -n "${pass}" | ./${BIN} ${OPTS} -a 0 -m ${hash_type} "${hash}" 2>&1)
 
@@ -415,7 +415,7 @@ function attack_0()
     e_nm=0
     cnt=0
 
-    echo "> Testing hash type $hash_type with attack mode 0, markov ${MARKOV}, multi hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 0, markov ${MARKOV}, multi hash." >> ${OUTD}/logfull.txt
 
     hash_file=${OUTD}/${hash_type}_hashes.txt
 
@@ -511,7 +511,7 @@ function attack_1()
     e_nm=0
     cnt=0
 
-    echo "> Testing hash type $hash_type with attack mode 1, markov ${MARKOV}, single hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 1, markov ${MARKOV}, single hash." >> ${OUTD}/logfull.txt
     i=1
     while read -u 9 hash; do
 
@@ -527,7 +527,7 @@ function attack_1()
 
         CMD="./${BIN} ${OPTS} -a 1 -m ${hash_type} '${hash}' ${OUTD}/${hash_type}_dict1 ${OUTD}/${hash_type}_dict2"
 
-        echo -n "[ len $i ] " &>> ${OUTD}/logfull.txt
+        echo -n "[ len $i ] " >> ${OUTD}/logfull.txt
 
         output=$(./${BIN} ${OPTS} -a 1 -m ${hash_type} "${hash}" ${OUTD}/${hash_type}_dict1 ${OUTD}/${hash_type}_dict2 2>&1)
 
@@ -631,7 +631,7 @@ function attack_1()
 
     CMD="./${BIN} ${OPTS} -a 1 -m ${hash_type} ${hash_file} ${OUTD}/${hash_type}_dict1 ${OUTD}/${hash_type}_dict2"
 
-    echo "> Testing hash type $hash_type with attack mode 1, markov ${MARKOV}, multi hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 1, markov ${MARKOV}, multi hash." >> ${OUTD}/logfull.txt
 
     output=$(./${BIN} ${OPTS} -a 1 -m ${hash_type} ${hash_file} ${OUTD}/${hash_type}_dict1 ${OUTD}/${hash_type}_dict2 2>&1)
 
@@ -709,7 +709,7 @@ function attack_3()
     e_nm=0
     cnt=0
 
-    echo "> Testing hash type $hash_type with attack mode 3, markov ${MARKOV}, single hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 3, markov ${MARKOV}, single hash." >> ${OUTD}/logfull.txt
 
     max=8
     mask_offset=0
@@ -773,7 +773,7 @@ function attack_3()
 
       CMD="./${BIN} ${OPTS} -a 3 -m ${hash_type} '${hash}' ${mask}"
 
-      echo -n "[ len $i ] " &>> ${OUTD}/logfull.txt
+      echo -n "[ len $i ] " >> ${OUTD}/logfull.txt
 
       output=$(./${BIN} ${OPTS} -a 3 -m ${hash_type} "${hash}" ${mask} 2>&1)
 
@@ -963,7 +963,7 @@ function attack_3()
 
     CMD="./${BIN} ${OPTS} -a 3 -m ${hash_type} --increment --increment-min ${increment_min} --increment-max ${increment_max} ${custom_charsets} ${hash_file} ${mask} "
 
-    echo "> Testing hash type $hash_type with attack mode 3, markov ${MARKOV}, multi hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 3, markov ${MARKOV}, multi hash." >> ${OUTD}/logfull.txt
 
     output=$(./${BIN} ${OPTS} -a 3 -m ${hash_type} --increment --increment-min ${increment_min} --increment-max ${increment_max} ${custom_charsets} ${hash_file} ${mask} 2>&1)
 
@@ -1038,7 +1038,7 @@ function attack_6()
     e_nm=0
     cnt=0
 
-    echo "> Testing hash type $hash_type with attack mode 6, markov ${MARKOV}, single hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 6, markov ${MARKOV}, single hash." >> ${OUTD}/logfull.txt
 
     i=1
 
@@ -1074,7 +1074,7 @@ function attack_6()
 
         CMD="./${BIN} ${OPTS} -a 6 -m ${hash_type} '${hash}' ${OUTD}/${hash_type}_dict1 ${mask_6[$i]}"
 
-        echo -n "[ len $i ] " &>> ${OUTD}/logfull.txt
+        echo -n "[ len $i ] " >> ${OUTD}/logfull.txt
 
         output=$(./${BIN} ${OPTS} -a 6 -m ${hash_type} "${hash}" ${OUTD}/${hash_type}_dict1 ${mask_6[$i]} 2>&1)
 
@@ -1186,7 +1186,7 @@ function attack_6()
 
       CMD="./${BIN} ${OPTS} -a 6 -m ${hash_type} ${hash_file} ${OUTD}/${hash_type}_dict1_multi_${i} ${mask_6[$i]}"
 
-      echo "> Testing hash type $hash_type with attack mode 6, markov ${MARKOV}, multi hash with word len ${i}." &>> ${OUTD}/logfull.txt
+      echo "> Testing hash type $hash_type with attack mode 6, markov ${MARKOV}, multi hash with word len ${i}." >> ${OUTD}/logfull.txt
 
       output=$(./${BIN} ${OPTS} -a 6 -m ${hash_type} ${hash_file} ${OUTD}/${hash_type}_dict1_multi_${i} ${mask_6[$i]} 2>&1)
 
@@ -1264,7 +1264,7 @@ function attack_7()
     e_nm=0
     cnt=0
 
-    echo "> Testing hash type $hash_type with attack mode 7, markov ${MARKOV}, single hash." &>> ${OUTD}/logfull.txt
+    echo "> Testing hash type $hash_type with attack mode 7, markov ${MARKOV}, single hash." >> ${OUTD}/logfull.txt
 
     max=8
 
@@ -1316,7 +1316,7 @@ function attack_7()
 
         CMD="./${BIN} ${OPTS} -a 7 -m ${hash_type} '${hash}' ${mask} ${OUTD}/${hash_type}_dict2"
 
-        echo -n "[ len $i ] " &>> ${OUTD}/logfull.txt
+        echo -n "[ len $i ] " >> ${OUTD}/logfull.txt
 
         output=$(./${BIN} ${OPTS} -a 7 -m ${hash_type} "${hash}" ${mask} ${OUTD}/${hash_type}_dict2 2>&1)
 
@@ -1457,7 +1457,7 @@ function attack_7()
 
       CMD="./${BIN} ${OPTS} -a 7 -m ${hash_type} ${hash_file} ${mask} ${dict_file}"
 
-      echo "> Testing hash type $hash_type with attack mode 7, markov ${MARKOV}, multi hash with word len ${i}." &>> ${OUTD}/logfull.txt
+      echo "> Testing hash type $hash_type with attack mode 7, markov ${MARKOV}, multi hash with word len ${i}." >> ${OUTD}/logfull.txt
 
       output=$(./${BIN} ${OPTS} -a 7 -m ${hash_type} ${hash_file} ${mask} ${dict_file} 2>&1)
 
@@ -1544,6 +1544,7 @@ OPTIONS:
   -o    Select operating system :
         'win'    => windows operating system (use .exe file extension etc)
         'linux'  => *nix based operating systems (.bin for binaries)
+        'osx'    => *bsd based operating systems (.app for binaries)
 
   -c    Disables markov-chains
 
@@ -1635,6 +1636,8 @@ while getopts "t:m:a:b:hcpd:x:o:" opt; do
         EXTENSION="exe"
       elif [ ${OPTARG} == "linux" ]; then
         EXTENSION="bin"
+      elif [ ${OPTARG} == "osx" ]; then
+        EXTENSION="app"
       else
         usage
       fi

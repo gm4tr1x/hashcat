@@ -52,6 +52,7 @@ RM                       := rm
 INSTALL                  := install
 
 CC_NATIVE                := gcc
+CC_NATIVE_OSX            := gcc
 
 ##
 ## Cross compiler paths
@@ -63,7 +64,7 @@ CC_LINUX_64              := gcc
 CC_WIN_32                := i686-w64-mingw32-gcc
 CC_WIN_64                := x86_64-w64-mingw32-gcc
 
-#CC_OSX_32                := gcc
+#CC_OSX_32                := i686-apple-darwin11-gcc-4.2.1
 #CC_OSX_64                := gcc
 # or 'i686-apple-darwin11-gcc-4.2.1' (found in 10.11.2)
 
@@ -95,7 +96,7 @@ CFLAGS_NATIVE            += -I$(NVML)/
 LFLAGS_NATIVE            := -lpthread -lOpenCL -ldl
 
 CFLAGS_NATIVE_OSX        := -D_POSIX -DOSX
-CFLAGS_NATIVE_OSX        += $(CFLAGS) -mmacosx-version-min=10.5
+CFLAGS_NATIVE_OSX        += $(CFLAGS) -mmacosx-version-min=10.5 -g -ggdb
 CFLAGS_NATIVE_OSX        += -I$(OPENCL_HEADERS_KHRONOS)/
 
 LFLAGS_NATIVE_OSX        := -framework OpenCL -lpthread -ldl
@@ -208,10 +209,10 @@ oclHashcat: src/oclHashcat.c obj/ext_OpenCL.oclHashcat.NATIVE.o obj/ext_nvml.ocl
 	$(CC_NATIVE) $(CFLAGS_NATIVE)    -o $@ $^ $(LFLAGS_NATIVE) -DCOMPTIME=$(NOW) -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 
 obj/%.oclHashcat.app.NATIVE.OSX.o: src/%.c
-	$(CC_NATIVE) $(CFLAGS_NATIVE_OSX) -c -o $@ $<
+	$(CC_NATIVE_OSX) $(CFLAGS_NATIVE_OSX) -c -o $@ $<
 
 oclHashcat.app: src/oclHashcat.c obj/ext_OpenCL.oclHashcat.app.NATIVE.OSX.o obj/shared.oclHashcat.app.NATIVE.OSX.o obj/rp_kernel_on_cpu.oclHashcat.app.NATIVE.OSX.o
-	$(CC_NATIVE) $(CFLAGS_NATIVE_OSX)    -o $@ $^ $(LFLAGS_NATIVE_OSX) -DCOMPTIME=$(NOW) -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
+	$(CC_NATIVE_OSX) $(CFLAGS_NATIVE_OSX) -o $@ $^ $(LFLAGS_NATIVE_OSX) -DCOMPTIME=$(NOW) -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 
 ##
 ## cross compiled oclHashcat for binary release version

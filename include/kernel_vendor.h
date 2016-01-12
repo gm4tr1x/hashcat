@@ -17,6 +17,11 @@
 #define IS_NV
 #endif
 
+#if VENDOR_ID == 5555 // temporary for apple
+#define IS_GENERIC
+#define IS_APPLE
+#endif
+
 #if VENDOR_ID == 9998 // temporary for dev
 #define IS_GENERIC
 #endif
@@ -39,4 +44,11 @@
  */
 
 #ifdef IS_NV
+#endif
+
+/**
+ * APPLE specific
+ */
+
+#ifdef IS_APPLE
 #endif
