@@ -144,6 +144,7 @@ clean:
 	$(RM) -rf *.induct
 	$(RM) -rf *.outfiles
 	$(RM) -rf *.app.dSYM
+	$(RM) -rf kernels
 
 linux32:        oclHashcat32.bin
 linux64:        oclHashcat64.bin

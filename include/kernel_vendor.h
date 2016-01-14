@@ -11,21 +11,11 @@
 
 #if VENDOR_ID == 4098
 #define IS_AMD
-#endif
-
-#if VENDOR_ID == 4318
+#elif VENDOR_ID == 4318
 #define IS_NV
-#endif
-
-#if VENDOR_ID == 5555 // temporary for apple
+#elif VENDOR_ID == 16925952
 #define IS_APPLE
-#endif
-
-#if VENDOR_ID == 9998 // temporary for dev
-#define IS_GENERIC
-#endif
-
-#if VENDOR_ID == 9999
+#else
 #define IS_GENERIC
 #endif
 

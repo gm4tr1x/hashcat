@@ -2665,11 +2665,11 @@ int hm_get_adapter_index_nv (HM_ADAPTER_NV nvGPUHandle[DEVICES_MAX])
 
   for (uint i = 0; i < DEVICES_MAX; i++)
   {
-    if (hc_NVML_nvmlDeviceGetHandleByIndex (data.hm_dll, 1, i, &nvGPUHandle[i]) != NVML_SUCCESS) break;
+    if (hc_NVML_nvmlDeviceGetHandleByIndex (data.hm_dll_nv, 1, i, &nvGPUHandle[i]) != NVML_SUCCESS) break;
 
     //can be used to determine if the device by index matches the cuda device by index
     //char name[100]; memset (name, 0, sizeof (name));
-    //hc_NVML_nvmlDeviceGetName (data.hm_dll, nvGPUHandle[i], name, sizeof (name) - 1);
+    //hc_NVML_nvmlDeviceGetName (data.hm_dll_nv, nvGPUHandle[i], name, sizeof (name) - 1);
 
     pGpuCount++;
   }
@@ -2696,11 +2696,11 @@ void hm_close (HM_LIB hm_dll)
   #endif
 }
 
-HM_LIB hm_init ()
+HM_LIB hm_init (const cl_uint vendor_id)
 {
   HM_LIB hm_dll = NULL;
 
-  if (data.vendor_id == VENDOR_ID_AMD)
+  if (vendor_id == VENDOR_ID_AMD)
   {
     #ifdef _POSIX
     hm_dll = dlopen ("libatiadlxx.so", RTLD_LAZY | RTLD_GLOBAL);
@@ -2717,7 +2717,7 @@ HM_LIB hm_init ()
   }
 
   #ifdef LINUX
-  if (data.vendor_id == VENDOR_ID_NV)
+  if (vendor_id == VENDOR_ID_NV)
   {
     hm_dll = dlopen ("libnvidia-ml.so", RTLD_LAZY | RTLD_GLOBAL);
   }
@@ -2726,9 +2726,9 @@ HM_LIB hm_init ()
   return hm_dll;
 }
 
-int get_adapters_num_amd (HM_LIB hm_dll, int *iNumberAdapters)
+int get_adapters_num_amd (HM_LIB hm_dll_amd, int *iNumberAdapters)
 {
-  if (hc_ADL_Adapter_NumberOfAdapters_Get (hm_dll, iNumberAdapters) != ADL_OK) return -1;
+  if (hc_ADL_Adapter_NumberOfAdapters_Get (hm_dll_amd, iNumberAdapters) != ADL_OK) return -1;
 
   if (iNumberAdapters == 0)
   {
@@ -2776,13 +2776,13 @@ int hm_show_performance_level (HM_LIB hm_dll, int iAdapterIndex)
 }
 */
 
-LPAdapterInfo hm_get_adapter_info_amd (HM_LIB hm_dll, int iNumberAdapters)
+LPAdapterInfo hm_get_adapter_info_amd (HM_LIB hm_dll_amd, int iNumberAdapters)
 {
   size_t AdapterInfoSize = iNumberAdapters * sizeof (AdapterInfo);
 
   LPAdapterInfo lpAdapterInfo = (LPAdapterInfo) mymalloc (AdapterInfoSize);
 
-  if (hc_ADL_Adapter_AdapterInfo_Get (hm_dll, lpAdapterInfo, AdapterInfoSize) != ADL_OK) return NULL;
+  if (hc_ADL_Adapter_AdapterInfo_Get (hm_dll_amd, lpAdapterInfo, AdapterInfoSize) != ADL_OK) return NULL;
 
   return lpAdapterInfo;
 }
@@ -2941,7 +2941,7 @@ uint32_t *hm_get_list_valid_adl_adapters (int iNumberAdapters, int *num_adl_adap
   return adl_adapters;
 }
 
-int hm_check_fanspeed_control (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *valid_adl_device_list, int num_adl_adapters, LPAdapterInfo lpAdapterInfo)
+int hm_check_fanspeed_control (HM_LIB hm_dll_amd, hm_attrs_t *hm_device, uint32_t *valid_adl_device_list, int num_adl_adapters, LPAdapterInfo lpAdapterInfo)
 {
   // loop through all valid devices
 
@@ -2959,7 +2959,7 @@ int hm_check_fanspeed_control (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *v
 
     int opencl_device_index = i;
 
-    // if (hm_show_performance_level (hm_dll, info.iAdapterIndex) != 0) return -1;
+    // if (hm_show_performance_level (hm_dll_amd, info.iAdapterIndex) != 0) return -1;
 
     // get fanspeed info
 
@@ -2971,7 +2971,7 @@ int hm_check_fanspeed_control (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *v
 
       FanSpeedInfo.iSize = sizeof (ADLFanSpeedInfo);
 
-      if (hc_ADL_Overdrive5_FanSpeedInfo_Get (hm_dll, info.iAdapterIndex, 0, &FanSpeedInfo) != ADL_OK) return -1;
+      if (hc_ADL_Overdrive5_FanSpeedInfo_Get (hm_dll_amd, info.iAdapterIndex, 0, &FanSpeedInfo) != ADL_OK) return -1;
 
       // check read and write capability in fanspeedinfo
 
@@ -2991,7 +2991,7 @@ int hm_check_fanspeed_control (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *v
 
       memset (&faninfo, 0, sizeof (faninfo));
 
-      if (hc_ADL_Overdrive6_FanSpeed_Get (hm_dll, info.iAdapterIndex, &faninfo) != ADL_OK) return -1;
+      if (hc_ADL_Overdrive6_FanSpeed_Get (hm_dll_amd, info.iAdapterIndex, &faninfo) != ADL_OK) return -1;
 
       // check read capability in fanspeedinfo
 
@@ -3009,7 +3009,7 @@ int hm_check_fanspeed_control (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *v
   return 0;
 }
 
-int hm_get_overdrive_version (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *valid_adl_device_list, int num_adl_adapters, LPAdapterInfo lpAdapterInfo)
+int hm_get_overdrive_version (HM_LIB hm_dll_amd, hm_attrs_t *hm_device, uint32_t *valid_adl_device_list, int num_adl_adapters, LPAdapterInfo lpAdapterInfo)
 {
   for (int i = 0; i < num_adl_adapters; i++)
   {
@@ -3025,7 +3025,7 @@ int hm_get_overdrive_version (HM_LIB hm_dll, hm_attrs_t *hm_device, uint32_t *va
     int od_enabled   = 0;
     int od_version   = 0;
 
-    if (hc_ADL_Overdrive_Caps (hm_dll, info.iAdapterIndex, &od_supported, &od_enabled, &od_version) != ADL_OK) return -1;
+    if (hc_ADL_Overdrive_Caps (hm_dll_amd, info.iAdapterIndex, &od_supported, &od_enabled, &od_version) != ADL_OK) return -1;
 
     // store the overdrive version in hm_device
 
@@ -3067,9 +3067,11 @@ int hm_get_adapter_index_amd (hm_attrs_t *hm_device, uint32_t *valid_adl_device_
 
 int hm_get_temperature_with_device_id (const uint device_id)
 {
-  if (data.vendor_id == VENDOR_ID_AMD)
+  if ((data.devices_param[device_id].device_type & CL_DEVICE_TYPE_GPU) == 0) return -1;
+
+  if (data.devices_param[device_id].vendor_id == VENDOR_ID_AMD)
   {
-    if (data.hm_dll)
+    if (data.hm_dll_amd)
     {
       if (data.hm_device[device_id].od_version == 5)
       {
@@ -3077,7 +3079,7 @@ int hm_get_temperature_with_device_id (const uint device_id)
 
         Temperature.iSize = sizeof (ADLTemperature);
 
-        if (hc_ADL_Overdrive5_Temperature_Get (data.hm_dll, data.hm_device[device_id].adapter_index.amd, 0, &Temperature) != ADL_OK) return -1;
+        if (hc_ADL_Overdrive5_Temperature_Get (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, 0, &Temperature) != ADL_OK) return -1;
 
         return Temperature.iTemperature / 1000;
       }
@@ -3085,19 +3087,18 @@ int hm_get_temperature_with_device_id (const uint device_id)
       {
         int Temperature = 0;
 
-        if (hc_ADL_Overdrive6_Temperature_Get (data.hm_dll, data.hm_device[device_id].adapter_index.amd, &Temperature) != ADL_OK) return -1;
+        if (hc_ADL_Overdrive6_Temperature_Get (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, &Temperature) != ADL_OK) return -1;
 
         return Temperature / 1000;
       }
     }
   }
-
-  if (data.vendor_id == VENDOR_ID_NV)
+  else if (data.devices_param[device_id].vendor_id == VENDOR_ID_NV)
   {
     #ifdef LINUX
     int temperature = 0;
 
-    hc_NVML_nvmlDeviceGetTemperature (data.hm_dll, data.hm_device[device_id].adapter_index.nv, NVML_TEMPERATURE_GPU, (unsigned int *) &temperature);
+    hc_NVML_nvmlDeviceGetTemperature (data.hm_dll_nv, data.hm_device[device_id].adapter_index.nv, NVML_TEMPERATURE_GPU, (unsigned int *) &temperature);
 
     return temperature;
     #endif
@@ -3123,9 +3124,9 @@ int hm_get_fanspeed_with_device_id (const uint device_id)
 {
   if (data.hm_device[device_id].fan_supported == 1)
   {
-    if (data.vendor_id == VENDOR_ID_AMD)
+    if (data.devices_param[device_id].vendor_id == VENDOR_ID_AMD)
     {
-      if (data.hm_dll)
+      if (data.hm_dll_amd)
       {
         if (data.hm_device[device_id].od_version == 5)
         {
@@ -3137,7 +3138,7 @@ int hm_get_fanspeed_with_device_id (const uint device_id)
           lpFanSpeedValue.iSpeedType = ADL_DL_FANCTRL_SPEED_TYPE_PERCENT;
           lpFanSpeedValue.iFlags     = ADL_DL_FANCTRL_FLAG_USER_DEFINED_SPEED;
 
-          if (hc_ADL_Overdrive5_FanSpeed_Get (data.hm_dll, data.hm_device[device_id].adapter_index.amd, 0, &lpFanSpeedValue) != ADL_OK) return -1;
+          if (hc_ADL_Overdrive5_FanSpeed_Get (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, 0, &lpFanSpeedValue) != ADL_OK) return -1;
 
           return lpFanSpeedValue.iFanSpeed;
         }
@@ -3147,19 +3148,18 @@ int hm_get_fanspeed_with_device_id (const uint device_id)
 
           memset (&faninfo, 0, sizeof (faninfo));
 
-          if (hc_ADL_Overdrive6_FanSpeed_Get (data.hm_dll, data.hm_device[device_id].adapter_index.amd, &faninfo) != ADL_OK) return -1;
+          if (hc_ADL_Overdrive6_FanSpeed_Get (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, &faninfo) != ADL_OK) return -1;
 
           return faninfo.iFanSpeedPercent;
         }
       }
     }
-
-    if (data.vendor_id == VENDOR_ID_NV)
+    else if (data.devices_param[device_id].vendor_id == VENDOR_ID_NV)
     {
       #ifdef LINUX
       int speed = 0;
 
-      hc_NVML_nvmlDeviceGetFanSpeed (data.hm_dll, 1, data.hm_device[device_id].adapter_index.nv, (unsigned int *) &speed);
+      hc_NVML_nvmlDeviceGetFanSpeed (data.hm_dll_nv, 1, data.hm_device[device_id].adapter_index.nv, (unsigned int *) &speed);
 
       return speed;
       #endif
@@ -3179,26 +3179,27 @@ int hm_get_fanspeed_with_device_id (const uint device_id)
 
 int hm_get_utilization_with_device_id (const uint device_id)
 {
-  if (data.vendor_id == VENDOR_ID_AMD)
+  if ((data.devices_param[device_id].device_type & CL_DEVICE_TYPE_GPU) == 0) return -1;
+
+  if (data.devices_param[device_id].vendor_id == VENDOR_ID_AMD)
   {
-    if (data.hm_dll)
+    if (data.hm_dll_amd)
     {
       ADLPMActivity PMActivity;
 
       PMActivity.iSize = sizeof (ADLPMActivity);
 
-      if (hc_ADL_Overdrive_CurrentActivity_Get (data.hm_dll, data.hm_device[device_id].adapter_index.amd, &PMActivity) != ADL_OK) return -1;
+      if (hc_ADL_Overdrive_CurrentActivity_Get (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, &PMActivity) != ADL_OK) return -1;
 
       return PMActivity.iActivityPercent;
     }
   }
-
-  if (data.vendor_id == VENDOR_ID_NV)
+  else if (data.devices_param[device_id].vendor_id == VENDOR_ID_NV)
   {
     #ifdef LINUX
     nvmlUtilization_t utilization;
 
-    hc_NVML_nvmlDeviceGetUtilizationRates (data.hm_dll, data.hm_device[device_id].adapter_index.nv, &utilization);
+    hc_NVML_nvmlDeviceGetUtilizationRates (data.hm_dll_nv, data.hm_device[device_id].adapter_index.nv, &utilization);
 
     return utilization.gpu;
     #endif
@@ -3221,7 +3222,7 @@ int hm_set_fanspeed_with_device_id_amd (const uint device_id, const int fanspeed
 {
   if (data.hm_device[device_id].fan_supported == 1)
   {
-    if (data.hm_dll)
+    if (data.hm_dll_amd)
     {
       if (data.hm_device[device_id].od_version == 5)
       {
@@ -3234,7 +3235,7 @@ int hm_set_fanspeed_with_device_id_amd (const uint device_id, const int fanspeed
         lpFanSpeedValue.iFlags     = ADL_DL_FANCTRL_FLAG_USER_DEFINED_SPEED;
         lpFanSpeedValue.iFanSpeed  = fanspeed;
 
-        if (hc_ADL_Overdrive5_FanSpeed_Set (data.hm_dll, data.hm_device[device_id].adapter_index.amd, 0, &lpFanSpeedValue) != ADL_OK) return -1;
+        if (hc_ADL_Overdrive5_FanSpeed_Set (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, 0, &lpFanSpeedValue) != ADL_OK) return -1;
 
         return 0;
       }
@@ -3247,7 +3248,7 @@ int hm_set_fanspeed_with_device_id_amd (const uint device_id, const int fanspeed
         fan_speed_value.iSpeedType = ADL_OD6_FANSPEED_TYPE_PERCENT;
         fan_speed_value.iFanSpeed  = fanspeed;
 
-        if (hc_ADL_Overdrive6_FanSpeed_Set (data.hm_dll, data.hm_device[device_id].adapter_index.amd, &fan_speed_value) != ADL_OK) return -1;
+        if (hc_ADL_Overdrive6_FanSpeed_Set (data.hm_dll_amd, data.hm_device[device_id].adapter_index.amd, &fan_speed_value) != ADL_OK) return -1;
 
         return 0;
       }
@@ -5103,6 +5104,41 @@ void handle_left_request_lm (pot_t *pot, uint pot_cnt, char *input_buf, int inpu
   if (weak_hash_found == 1) myfree (pot_right_ptr);
 }
 
+uint setup_opencl_platforms_filter (char *opencl_platforms)
+{
+  uint opencl_platforms_filter = 0;
+
+  if (opencl_platforms)
+  {
+    char *platforms = strdup (opencl_platforms);
+
+    char *next = strtok (platforms, ",");
+
+    do
+    {
+      int platform = atoi (next);
+
+      if (platform < 1 || platform > 31)
+      {
+        log_error ("ERROR: invalid OpenCL platform %u specified", platform);
+
+        exit (-1);
+      }
+
+      opencl_platforms_filter |= 1 << (platform - 1);
+
+    } while ((next = strtok (NULL, ",")) != NULL);
+
+    free (platforms);
+  }
+  else
+  {
+    opencl_platforms_filter = -1;
+  }
+
+  return opencl_platforms_filter;
+}
+
 cl_device_type setup_device_types_filter (char *opencl_device_types)
 {
   cl_device_type device_types_filter = 0;
@@ -5132,7 +5168,10 @@ cl_device_type setup_device_types_filter (char *opencl_device_types)
   }
   else
   {
-    device_types_filter = CL_DEVICE_TYPE_ALL;
+    // Do not use CPU by default, this often reduces GPU performance because
+    // the CPU is to busy to handle GPU synchronization
+
+    device_types_filter = CL_DEVICE_TYPE_ALL & ~CL_DEVICE_TYPE_CPU;
   }
 
   return device_types_filter;
@@ -12886,7 +12925,14 @@ int sha512osx_parse_hash (char *input_buf, uint input_len, hash_t *hash_buf)
 
   salt->salt_buf[0] = pbkdf2_sha512->salt_buf[0];
 
-  salt->salt_iter = atoi (iter_pos) - 1;
+  uint iter = atoi (iter_pos);
+
+  if (iter < 1)
+  {
+    iter = ROUNDS_DCC2;
+  }
+
+  salt->salt_iter = iter - 1;
 
   return (PARSER_OK);
 }
