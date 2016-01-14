@@ -237,7 +237,11 @@ static void hmac_sha1_run (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], u32 ipad[
   sha1_transform (w0, w1, w2, w3, digest);
 }
 
+#ifdef IS_APPLE
+static void m05400m (u32 w_s[16], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global ikepsk_t *ikepsk_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 s_msg_buf[128])
+#else
 static void m05400m (__local u32 w_s[16], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global ikepsk_t *ikepsk_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 s_msg_buf[128])
+#endif
 {
   /**
    * modifier
@@ -395,7 +399,11 @@ static void m05400m (__local u32 w_s[16], u32 w0[4], u32 w1[4], u32 w2[4], u32 w
   }
 }
 
+#ifdef IS_APPLE
+static void m05400s (u32 w_s[16], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global ikepsk_t *ikepsk_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 s_msg_buf[128])
+#else
 static void m05400s (__local u32 w_s[16], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global ikepsk_t *ikepsk_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 s_msg_buf[128])
+#endif
 {
   /**
    * modifier
@@ -613,7 +621,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_m04 (__glo
    * s_msg
    */
 
+  #ifdef IS_APPLE
+  u32 w_s[16];
+  #else
   __local u32 w_s[16];
+  #endif
 
   if (lid < 16)
   {
@@ -622,7 +634,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_m04 (__glo
 
   barrier (CLK_LOCAL_MEM_FENCE);
 
+  #ifdef IS_APPLE
+  u32 s_msg_buf[128];
+  #else
   __local u32 s_msg_buf[128];
+  #endif
 
   const u32 lid2 = lid * 2;
 
@@ -688,7 +704,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_m08 (__glo
    * s_msg
    */
 
+  #ifdef IS_APPLE
+  u32 w_s[16];
+  #else
   __local u32 w_s[16];
+  #endif
 
   if (lid < 16)
   {
@@ -697,7 +717,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_m08 (__glo
 
   barrier (CLK_LOCAL_MEM_FENCE);
 
+  #ifdef IS_APPLE
+  u32 s_msg_buf[128];
+  #else
   __local u32 s_msg_buf[128];
+  #endif
 
   const u32 lid2 = lid * 2;
 
@@ -763,7 +787,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_m16 (__glo
    * s_msg
    */
 
+  #ifdef IS_APPLE
+  u32 w_s[16];
+  #else
   __local u32 w_s[16];
+  #endif
 
   if (lid < 16)
   {
@@ -772,7 +800,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_m16 (__glo
 
   barrier (CLK_LOCAL_MEM_FENCE);
 
+  #ifdef IS_APPLE
+  u32 s_msg_buf[128];
+  #else
   __local u32 s_msg_buf[128];
+  #endif
 
   const u32 lid2 = lid * 2;
 
@@ -838,7 +870,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_s04 (__glo
    * s_msg_buf
    */
 
+  #ifdef IS_APPLE
+  u32 w_s[16];
+  #else
   __local u32 w_s[16];
+  #endif
 
   if (lid < 16)
   {
@@ -847,7 +883,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_s04 (__glo
 
   barrier (CLK_LOCAL_MEM_FENCE);
 
+  #ifdef IS_APPLE
+  u32 s_msg_buf[128];
+  #else
   __local u32 s_msg_buf[128];
+  #endif
 
   const u32 lid2 = lid * 2;
 
@@ -913,7 +953,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_s08 (__glo
    * s_msg_buf
    */
 
+  #ifdef IS_APPLE
+  u32 w_s[16];
+  #else
   __local u32 w_s[16];
+  #endif
 
   if (lid < 16)
   {
@@ -922,7 +966,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_s08 (__glo
 
   barrier (CLK_LOCAL_MEM_FENCE);
 
+  #ifdef IS_APPLE
+  u32 s_msg_buf[128];
+  #else
   __local u32 s_msg_buf[128];
+  #endif
 
   const u32 lid2 = lid * 2;
 
@@ -988,7 +1036,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_s16 (__glo
    * s_msg_buf
    */
 
+  #ifdef IS_APPLE
+  u32 w_s[16];
+  #else
   __local u32 w_s[16];
+  #endif
 
   if (lid < 16)
   {
@@ -997,7 +1049,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m05400_s16 (__glo
 
   barrier (CLK_LOCAL_MEM_FENCE);
 
+  #ifdef IS_APPLE
+  u32 s_msg_buf[128];
+  #else
   __local u32 s_msg_buf[128];
+  #endif
 
   const u32 lid2 = lid * 2;
 

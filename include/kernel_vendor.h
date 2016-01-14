@@ -18,7 +18,6 @@
 #endif
 
 #if VENDOR_ID == 5555 // temporary for apple
-#define IS_GENERIC
 #define IS_APPLE
 #endif
 
@@ -51,4 +50,5 @@
  */
 
 #ifdef IS_APPLE
+#define IS_GENERIC
 #endif

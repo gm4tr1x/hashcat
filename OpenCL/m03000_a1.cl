@@ -341,7 +341,11 @@ __constant u32 c_skb[8][64] =
 
 #define BOX(i,n,S) (S)[(n)][(i)]
 
+#ifdef IS_APPLE
+static void _des_crypt_encrypt (u32 iv[2], u32 data[2], u32 Kc[16], u32 Kd[16], u32 s_SPtrans[8][64])
+#else
 static void _des_crypt_encrypt (u32 iv[2], u32 data[2], u32 Kc[16], u32 Kd[16], __local u32 s_SPtrans[8][64])
+#endif
 {
   u32 r = data[0];
   u32 l = data[1];
@@ -381,7 +385,11 @@ static void _des_crypt_encrypt (u32 iv[2], u32 data[2], u32 Kc[16], u32 Kd[16], 
   iv[1] = rotl32 (r, 29);
 }
 
+#ifdef IS_APPLE
+static void _des_crypt_keysetup (u32 c, u32 d, u32 Kc[16], u32 Kd[16], u32 s_skb[8][64])
+#else
 static void _des_crypt_keysetup (u32 c, u32 d, u32 Kc[16], u32 Kd[16], __local u32 s_skb[8][64])
+#endif
 {
   u32 tt;
 
@@ -522,9 +530,13 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m03000_m04 (__glo
    * sbox, kbox
    */
 
+  #ifdef IS_APPLE
+  u32 s_SPtrans[8][64];
+  u32 s_skb[8][64];
+  #else
   __local u32 s_SPtrans[8][64];
-
   __local u32 s_skb[8][64];
+  #endif
 
   s_SPtrans[0][lid] = c_SPtrans[0][lid];
   s_SPtrans[1][lid] = c_SPtrans[1][lid];
@@ -712,9 +724,13 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m03000_s04 (__glo
    * sbox, kbox
    */
 
+  #ifdef IS_APPLE
+  u32 s_SPtrans[8][64];
+  u32 s_skb[8][64];
+  #else
   __local u32 s_SPtrans[8][64];
-
   __local u32 s_skb[8][64];
+  #endif
 
   s_SPtrans[0][lid] = c_SPtrans[0][lid];
   s_SPtrans[1][lid] = c_SPtrans[1][lid];

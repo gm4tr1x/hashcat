@@ -204,7 +204,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00010_m04 (__glo
      * md5
      */
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -493,7 +493,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00010_s04 (__glo
      * md5
      */
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;

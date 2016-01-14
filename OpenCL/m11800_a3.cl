@@ -2226,7 +2226,11 @@ __constant u64 sbob_rc64[12][8] =
   },
 };
 
+#ifdef IS_APPLE
+static void streebog_g (u64 h[8], const u64 m[8], u64 s_sbob_sl64[8][256])
+#else
 static void streebog_g (u64 h[8], const u64 m[8], __local u64 s_sbob_sl64[8][256])
+#endif
 {
   u64 k[8];
   u64 s[8];
@@ -2282,7 +2286,11 @@ static void streebog_g (u64 h[8], const u64 m[8], __local u64 s_sbob_sl64[8][256
   }
 }
 
+#ifdef IS_APPLE
+static void m11800m (u64 s_sbob_sl64[8][256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#else
 static void m11800m (__local u64 s_sbob_sl64[8][256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#endif
 {
   /**
    * modifier
@@ -2365,7 +2373,11 @@ static void m11800m (__local u64 s_sbob_sl64[8][256], u32 w[16], const u32 pw_le
   }
 }
 
+#ifdef IS_APPLE
+static void m11800s (u64 s_sbob_sl64[8][256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#else
 static void m11800s (__local u64 s_sbob_sl64[8][256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#endif
 {
   /**
    * modifier
@@ -2496,7 +2508,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m04 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u64 s_sbob_sl64[8][256];
+  #else
   __local u64 s_sbob_sl64[8][256];
+  #endif
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2531,7 +2547,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m04 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
+  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
+  #endif
 
   if (gid >= gid_max) return;
 
@@ -2578,7 +2596,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m08 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u64 s_sbob_sl64[8][256];
+  #else
   __local u64 s_sbob_sl64[8][256];
+  #endif
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2613,7 +2635,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m08 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
+  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
+  #endif
 
   if (gid >= gid_max) return;
 
@@ -2660,7 +2684,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m16 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u64 s_sbob_sl64[8][256];
+  #else
   __local u64 s_sbob_sl64[8][256];
+  #endif
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2695,7 +2723,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m16 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
+  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
+  #endif
 
   if (gid >= gid_max) return;
 
@@ -2742,7 +2772,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s04 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u64 s_sbob_sl64[8][256];
+  #else
   __local u64 s_sbob_sl64[8][256];
+  #endif
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2777,7 +2811,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s04 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
+  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
+  #endif
 
   if (gid >= gid_max) return;
 
@@ -2824,7 +2860,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s08 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u64 s_sbob_sl64[8][256];
+  #else
   __local u64 s_sbob_sl64[8][256];
+  #endif
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2859,7 +2899,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s08 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
+  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
+  #endif
 
   if (gid >= gid_max) return;
 
@@ -2906,7 +2948,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s16 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u64 s_sbob_sl64[8][256];
+  #else
   __local u64 s_sbob_sl64[8][256];
+  #endif
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2941,7 +2987,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s16 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
+  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
+  #endif
 
   if (gid >= gid_max) return;
 

@@ -6,6 +6,7 @@
 #ifndef SHARED_H
 #define SHARED_H
 
+#include <stdio.h>
 #include <common.h>
 #include <constants.h>
 
@@ -259,7 +260,11 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_ACCEL_4700    64
 #define KERNEL_ACCEL_4800    128
 #define KERNEL_ACCEL_4900    64
+#ifdef OSX
+#define KERNEL_ACCEL_5000    16
+#else
 #define KERNEL_ACCEL_5000    64
+#endif
 #define KERNEL_ACCEL_5100    64
 #define KERNEL_ACCEL_5200    8
 #define KERNEL_ACCEL_5300    32
@@ -269,7 +274,11 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_ACCEL_5700    64
 #define KERNEL_ACCEL_5800    8
 #define KERNEL_ACCEL_6000    64
+#ifdef OSX
+#define KERNEL_ACCEL_6100    2
+#else
 #define KERNEL_ACCEL_6100    8
+#endif
 #define KERNEL_ACCEL_6211    16
 #define KERNEL_ACCEL_6212    8
 #define KERNEL_ACCEL_6213    8
@@ -288,7 +297,11 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_ACCEL_6600    8
 #define KERNEL_ACCEL_6700    8
 #define KERNEL_ACCEL_6800    8
+#ifdef OSX
+#define KERNEL_ACCEL_6900    4
+#else
 #define KERNEL_ACCEL_6900    16
+#endif
 #define KERNEL_ACCEL_7100    2
 #define KERNEL_ACCEL_7200    2
 #define KERNEL_ACCEL_7300    64
@@ -329,7 +342,11 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_ACCEL_10400   8
 #define KERNEL_ACCEL_10410   8
 #define KERNEL_ACCEL_10420   8
+#ifdef OSX
+#define KERNEL_ACCEL_10500   8
+#else
 #define KERNEL_ACCEL_10500   64
+#endif
 #define KERNEL_ACCEL_10600   64
 #define KERNEL_ACCEL_10700   1
 #define KERNEL_ACCEL_10800   64
@@ -341,8 +358,16 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_ACCEL_11400   8
 #define KERNEL_ACCEL_11500   128
 #define KERNEL_ACCEL_11600   2
+#ifdef OSX
+#define KERNEL_ACCEL_11700   1
+#else
 #define KERNEL_ACCEL_11700   4
+#endif
+#ifdef OSX
+#define KERNEL_ACCEL_11800   1
+#else
 #define KERNEL_ACCEL_11800   4
+#endif
 #define KERNEL_ACCEL_11900   2
 #define KERNEL_ACCEL_12000   2
 #define KERNEL_ACCEL_12100   2
@@ -1638,6 +1663,7 @@ void handle_show_request_lm (pot_t *pot, uint pot_cnt, char *input_buf, int inpu
 void handle_left_request_lm (pot_t *pot, uint pot_cnt, char *input_buf, int input_len, hash_t *hash_left, hash_t *hash_right, int (*sort_by_pot) (const void *, const void *), FILE *out_fp);
 
 uint devices_to_devicemask (char *opencl_devices);
+cl_device_type setup_device_types_filter (char *opencl_device_types);
 uint get_random_num (uint min, uint max);
 uint32_t mydivc32 (const uint32_t dividend, const uint32_t divisor);
 uint64_t mydivc64 (const uint64_t dividend, const uint64_t divisor);
@@ -1964,4 +1990,5 @@ void *thread_runtime   (void *p);
 
 #include "cpu-aes.h"
 
+void hm_device_val_to_str (char *target_buf, int max_buf_size, char *suffix, int value);
 #endif

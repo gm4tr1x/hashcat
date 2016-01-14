@@ -351,7 +351,7 @@ static void m07800m (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_le
 
     u32 final_len = pw_len;
 
-    int i;
+    u32 i;
 
     // append MagicArray
 
@@ -582,7 +582,7 @@ static void m07800s (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_le
 
     u32 final_len = pw_len;
 
-    int i;
+    u32 i;
 
     // append MagicArray
 
@@ -654,7 +654,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07800_m04 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 
@@ -707,7 +707,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07800_m08 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 
@@ -764,7 +764,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07800_s04 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 
@@ -817,7 +817,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07800_s08 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 

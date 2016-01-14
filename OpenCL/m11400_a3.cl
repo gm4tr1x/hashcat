@@ -743,7 +743,11 @@ static u32 memcat32 (u32 block0[16], u32 block1[16], const u32 block_len, const 
   return new_len;
 }
 
+#ifdef IS_APPLE
+static void m11400m_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400m_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -944,7 +948,7 @@ static void m11400m_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -1246,7 +1250,11 @@ static void m11400m_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400m_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400m_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -1466,7 +1474,7 @@ static void m11400m_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -1868,7 +1876,11 @@ static void m11400m_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400m_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400m_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -2069,7 +2081,7 @@ static void m11400m_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -2469,7 +2481,11 @@ static void m11400m_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400m_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400m_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -2689,7 +2705,7 @@ static void m11400m_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -3189,7 +3205,11 @@ static void m11400m_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400s_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400s_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -3390,7 +3410,7 @@ static void m11400s_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -3692,7 +3712,11 @@ static void m11400s_0_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400s_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400s_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -3912,7 +3936,7 @@ static void m11400s_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -4314,7 +4338,11 @@ static void m11400s_0_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400s_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400s_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -4515,7 +4543,7 @@ static void m11400s_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -4915,7 +4943,11 @@ static void m11400s_1_0 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
   }
 }
 
+#ifdef IS_APPLE
+static void m11400s_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
+#else
 static void m11400s_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global sip_t *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
+#endif
 {
   /**
    * modifier
@@ -5135,7 +5167,7 @@ static void m11400s_1_1 (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 p
 
     // md5
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -5684,7 +5716,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11400_m04 (__glo
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 
@@ -5790,7 +5826,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11400_m08 (__glo
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 
@@ -5896,7 +5936,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11400_m16 (__glo
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 
@@ -6002,7 +6046,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11400_s04 (__glo
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 
@@ -6108,7 +6156,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11400_s08 (__glo
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 
@@ -6214,7 +6266,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11400_s16 (__glo
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 

@@ -784,7 +784,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07700_m04 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 
@@ -837,7 +837,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07700_m08 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 
@@ -894,7 +894,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07700_s04 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 
@@ -947,7 +947,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07700_s08 (__glo
    * modifier
    */
 
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   u32 w0[4];
 

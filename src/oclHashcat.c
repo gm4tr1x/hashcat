@@ -215,7 +215,7 @@ static uint default_benchmark_algorithms[NUM_DEFAULT_BENCHMARK_ALGORITHMS] =
   1000,
   1100,
   2100,
- 12800,
+  12800,
   1500,
   12400,
   500,
@@ -387,6 +387,7 @@ const char *USAGE_BIG[] =
   "       --bitmap-max=NUM              Maximum number of bits allowed for bitmaps",
   "       --cpu-affinity=STR            Locks to CPU devices, separate with comma",
   "  -d,  --opencl-devices=STR          OpenCL devices to use, separate with comma",
+  "       --opencl-device-types=STR     OpenCL device-types to use, separate with comma, see references below",
   "       --opencl-platform=NUM         OpenCL platform to use, in case multiple platforms are present",
   "  -w,  --workload-profile=NUM        Enable a specific workload profile, see references below",
   "  -n,  --kernel-accel=NUM            Workload tuning: 1, 8, 40, 80, 160",
@@ -1616,6 +1617,8 @@ void generate_source_kernel_filename (const uint attack_exec, const uint attack_
   }
   else
     snprintf (source_file, 255, "%s/OpenCL/m%05d.cl", shared_dir, (int) kern_type);
+
+  log_info ("Source from '%s'\n", source_file);
 }
 
 void generate_cached_kernel_filename (const uint attack_exec, const uint attack_kern, const uint kern_type, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
@@ -1630,9 +1633,9 @@ void generate_cached_kernel_filename (const uint attack_exec, const uint attack_
       snprintf (cached_file, 255, "%s/kernels/%d/m%05d_a3.%s.kernel", profile_dir, vendor_id, (int) kern_type, device_name_chksum);
   }
   else
-  {
     snprintf (cached_file, 255, "%s/kernels/%d/m%05d.%s.kernel", profile_dir, vendor_id, (int) kern_type, device_name_chksum);
-  }
+
+  log_info ("Source from '%s'\n", cached_file);
 }
 
 void generate_source_kernel_mp_filename (const uint opti_type, const uint opts_type, char *shared_dir, char *source_file)
@@ -1645,6 +1648,8 @@ void generate_source_kernel_mp_filename (const uint opti_type, const uint opts_t
   {
     snprintf (source_file, 255, "%s/OpenCL/markov_le.cl", shared_dir);
   }
+
+  log_info ("Source from '%s'\n", source_file);
 }
 
 void generate_cached_kernel_mp_filename (const uint opti_type, const uint opts_type, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
@@ -1657,16 +1662,19 @@ void generate_cached_kernel_mp_filename (const uint opti_type, const uint opts_t
   {
     snprintf (cached_file, 255, "%s/kernels/%d/markov_le.%s.kernel", profile_dir, vendor_id, device_name_chksum);
   }
+  log_info ("Source from '%s'\n", cached_file);
 }
 
 void generate_source_kernel_amp_filename (const uint attack_kern, char *shared_dir, char *source_file)
 {
   snprintf (source_file, 255, "%s/OpenCL/amp_a%d.cl", shared_dir, attack_kern);
+  log_info ("Source from '%s'\n", source_file);
 }
 
 void generate_cached_kernel_amp_filename (const uint attack_kern, char *profile_dir, char *device_name_chksum, int vendor_id, char *cached_file)
 {
   snprintf (cached_file, 255, "%s/kernels/%d/amp_a%d.%s.kernel", profile_dir, vendor_id, attack_kern, device_name_chksum);
+  log_info ("Source from '%s'\n", cached_file);
 }
 
 uint convert_from_hex (char *line_buf, const uint line_len)
@@ -2549,7 +2557,7 @@ void run_kernel_bzero (hc_device_param_t *device_param, cl_mem buf, const uint s
     myfree (tmp);
   }
 
-  if (data.vendor_id == VENDOR_ID_GENERIC)
+  if (data.vendor_id == VENDOR_ID_GENERIC || data.vendor_id == VENDOR_ID_APPLE)
   {
     const cl_uchar zero = 0;
 
@@ -5100,6 +5108,7 @@ int main (int argc, char **argv)
   char *cpu_affinity      = NULL;
   char *opencl_devices    = NULL;
   char *opencl_platform   = NULL;
+  char *opencl_device_types = NULL;
   char *truecrypt_keyfiles = NULL;
   uint  workload_profile  = WORKLOAD_PROFILE;
   uint  kernel_accel      = KERNEL_ACCEL;
@@ -5174,6 +5183,7 @@ int main (int argc, char **argv)
   #define IDX_CPU_AFFINITY      0xff25
   #define IDX_OPENCL_DEVICES    'd'
   #define IDX_OPENCL_PLATFORM   0xff72
+  #define IDX_OPENCL_DEVICE_TYPES 0xff73
   #define IDX_WORKLOAD_PROFILE  'w'
   #define IDX_KERNEL_ACCEL      'n'
   #define IDX_KERNEL_LOOPS      'u'
@@ -5254,6 +5264,7 @@ int main (int argc, char **argv)
     {"cpu-affinity",      required_argument, 0, IDX_CPU_AFFINITY},
     {"opencl-devices",    required_argument, 0, IDX_OPENCL_DEVICES},
     {"opencl-platform",   required_argument, 0, IDX_OPENCL_PLATFORM},
+    {"opencl-device-types", required_argument, 0, IDX_OPENCL_DEVICE_TYPES},
     {"workload-profile",  required_argument, 0, IDX_WORKLOAD_PROFILE},
     {"kernel-accel",      required_argument, 0, IDX_KERNEL_ACCEL},
     {"kernel-loops",      required_argument, 0, IDX_KERNEL_LOOPS},
@@ -5542,6 +5553,8 @@ int main (int argc, char **argv)
       case IDX_CPU_AFFINITY:      cpu_affinity      = optarg;          break;
       case IDX_OPENCL_DEVICES:    opencl_devices    = optarg;          break;
       case IDX_OPENCL_PLATFORM:   opencl_platform   = optarg;          break;
+      case IDX_OPENCL_DEVICE_TYPES:
+                                  opencl_device_types = optarg;        break;
       case IDX_WORKLOAD_PROFILE:  workload_profile  = atoi (optarg);   break;
       case IDX_KERNEL_ACCEL:      kernel_accel      = atoi (optarg);
                                   kernel_accel_chgd = 1;               break;
@@ -5593,7 +5606,7 @@ int main (int argc, char **argv)
   {
     if (benchmark == 1)
     {
-      log_info ("%s v%.2f starting in benchmark-mode...", PROGNAME, (float) VERSION_BIN / 100);
+      log_info ("%s v%.2f starting in benchmark-mode (%d)...", PROGNAME, (float) VERSION_BIN / 100, benchmark_mode);
 
       log_info ("");
     }
@@ -6375,6 +6388,7 @@ int main (int argc, char **argv)
   logfile_top_string (debug_file);
   logfile_top_string (opencl_devices);
   logfile_top_string (opencl_platform);
+  logfile_top_string (opencl_device_types);
   logfile_top_string (induction_dir);
   logfile_top_string (markov_hcstat);
   logfile_top_string (outfile);
@@ -6383,6 +6397,12 @@ int main (int argc, char **argv)
   logfile_top_string (rule_buf_r);
   logfile_top_string (session);
   logfile_top_string (truecrypt_keyfiles);
+
+  /**
+   * device types filter
+   */
+
+  cl_device_type device_types_filter = setup_device_types_filter (opencl_device_types);
 
   /**
    * devices
@@ -6424,7 +6444,7 @@ int main (int argc, char **argv)
 
     if (runtime_chgd == 0)
     {
-      runtime =  4;
+      runtime =  8;
 
       if (benchmark_mode == 1) runtime = 17;
 
@@ -7543,8 +7563,12 @@ int main (int argc, char **argv)
       case  1500:  hash_type   = HASH_TYPE_DESCRYPT;
                    salt_type   = SALT_TYPE_EMBEDDED;
                    attack_exec = ATTACK_EXEC_INSIDE_KERNEL;
+#ifdef OSX
+                   opts_type   = OPTS_TYPE_PT_GENERATE_LE;
+#else
                    opts_type   = OPTS_TYPE_PT_GENERATE_LE
                                | OPTS_TYPE_PT_BITSLICE;
+#endif
                    kern_type   = KERN_TYPE_DESCRYPT;
                    dgst_size   = DGST_SIZE_4_4; // originally DGST_SIZE_4_2
                    parse_func  = descrypt_parse_hash;
@@ -7988,9 +8012,14 @@ int main (int argc, char **argv)
       case  3000:  hash_type   = HASH_TYPE_LM;
                    salt_type   = SALT_TYPE_NONE;
                    attack_exec = ATTACK_EXEC_INSIDE_KERNEL;
+#ifdef OSX
+                   opts_type   = OPTS_TYPE_PT_GENERATE_LE
+                               | OPTS_TYPE_PT_UPPER;
+#else
                    opts_type   = OPTS_TYPE_PT_GENERATE_LE
                                | OPTS_TYPE_PT_UPPER
                                | OPTS_TYPE_PT_BITSLICE;
+#endif
                    kern_type   = KERN_TYPE_LM;
                    dgst_size   = DGST_SIZE_4_4; // originally DGST_SIZE_4_2
                    parse_func  = lm_parse_hash;
@@ -10224,8 +10253,8 @@ int main (int argc, char **argv)
      * kernel accel and loops auto adjustment
      */
 
-    if (kernel_accel_chgd == 0) kernel_accel = set_kernel_accel (hash_mode);
     if (kernel_loops_chgd == 0) kernel_loops = set_kernel_loops (hash_mode);
+    if (kernel_accel_chgd == 0) kernel_accel = set_kernel_accel (hash_mode);
 
     if (workload_profile == 1)
     {
@@ -11191,11 +11220,18 @@ int main (int argc, char **argv)
 
       if (benchmark_mode == 1)
       {
-        #if !defined(OSX)
+        #ifndef OSX
         kernel_loops *= 8;
-        kernel_accel *= 4;
         #endif
 
+        #ifdef OSX
+        if (hash_mode != 10700) kernel_accel *= 4;
+        if (hash_mode == 1500) kernel_loops = 16;
+        #else
+	kernel_accel *= 4;
+        #endif
+
+        #ifndef OSX
         switch (hash_mode)
         {
           case   400:  kernel_loops = ROUNDS_PHPASS;
@@ -11330,8 +11366,12 @@ int main (int argc, char **argv)
           case 10300:  kernel_loops = ROUNDS_SAPH_SHA1;
                        kernel_accel = 16;
                        break;
+          #ifdef OSX
+          case 10500:  kernel_accel = 64;
+          #else
           case 10500:  kernel_loops = ROUNDS_PDF14;
                        kernel_accel = 256;
+          #endif
                        break;
           case 10700:  kernel_loops = ROUNDS_PDF17L8;
                        kernel_accel = 8;
@@ -11376,6 +11416,7 @@ int main (int argc, char **argv)
                        kernel_accel = 8;
                        break;
         }
+	#endif
 
         // some algorithm collide too fast, make that impossible
 
@@ -12046,7 +12087,11 @@ int main (int argc, char **argv)
      * Some algorithm, like descrypt, can benefit from JIT compilation
      */
 
+    #if defined(OSX)
     uint force_jit_compilation = 1500;
+    #else
+    uint force_jit_compilation = 0;
+    #endif
 
     if (hash_mode == 8900)
     {
@@ -12405,7 +12450,6 @@ int main (int argc, char **argv)
 
     CL_platform_sel -= 1;
 
-
     cl_platform_id CL_platform = CL_platforms[CL_platform_sel];
 
     char CL_platform_vendor[INFOSZ];
@@ -12446,7 +12490,9 @@ int main (int argc, char **argv)
         return (-1);
       }
 
-      vendor_id = VENDOR_ID_GENERIC;
+      gpu_temp_disable = 1;
+
+      vendor_id = VENDOR_ID_APPLE;
 
       device_type_filter = CL_DEVICE_TYPE_DEFAULT;
     }
@@ -12509,7 +12555,7 @@ int main (int argc, char **argv)
 
     uint devices_all_cnt = 0;
 
-    hc_clGetDeviceIDs (CL_platform, device_type_filter, DEVICES_MAX, devices_all, (uint *) &devices_all_cnt);
+    hc_clGetDeviceIDs (CL_platform, device_types_filter, DEVICES_MAX, devices_all, (uint *) &devices_all_cnt);
 
     int hm_adapters_all = devices_all_cnt;
 
@@ -12654,6 +12700,13 @@ int main (int argc, char **argv)
      * devices mask and properties
      */
 
+    uint quiet_sav = quiet;
+
+    if (benchmark)
+    {
+      quiet = 0;
+    }
+
     uint devices_cnt = 0;
 
     for (uint device_all_id = 0; device_all_id < devices_all_cnt; device_all_id++)
@@ -12706,6 +12759,8 @@ int main (int argc, char **argv)
 
       devices_cnt++;
     }
+
+    quiet = quiet_sav;
 
     if (devices_cnt == 0)
     {
@@ -12869,16 +12924,20 @@ int main (int argc, char **argv)
       sprintf (tmp, "%08x", device_name_digest[0]);
 
       device_param->device_name_chksum = mystrdup (tmp);
+      device_param->device_processor_cores = 1;
 
       if (device_type & CL_DEVICE_TYPE_CPU)
       {
-        cl_uint device_processor_cores = 1;
-
-        device_param->device_processor_cores = device_processor_cores;
+//        cl_uint device_processor_cores = 1;
+//        device_param->device_processor_cores = device_processor_cores;
       }
 
       if (device_type & CL_DEVICE_TYPE_GPU)
       {
+        if (vendor_id == VENDOR_ID_APPLE)
+        {
+        }
+
         if (vendor_id == VENDOR_ID_AMD)
         {
           cl_uint device_processor_cores = 0;
@@ -13290,6 +13349,7 @@ int main (int argc, char **argv)
 
             continue;
           }
+log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\n", device_processors, device_processor_cores, shader_per_mp);
 
           for (uint salts_pos = 0; salts_pos < data.salts_cnt; salts_pos++)
           {
@@ -13304,7 +13364,8 @@ int main (int argc, char **argv)
         {
           log_error ("ERROR: can't allocate enough device memory");
 
-          return -1;
+          if (benchmark == 0) return -1;
+          else continue;
         }
 
         if (quiet == 0) log_info ("");
@@ -13821,6 +13882,7 @@ int main (int argc, char **argv)
 
       device_param->d_pws_buf       = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY,   size_pws,     NULL);
       device_param->d_pws_amp_buf   = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY,   size_pws,     NULL);
+      device_param->d_rules_c       = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY,   size_rules_c, NULL); // we need this for weak-hash-check even if the user has choosen for ex: -a 3
       device_param->d_tmps          = hc_clCreateBuffer (device_param->context, CL_MEM_READ_WRITE,  size_tmps,    NULL);
       device_param->d_hooks         = hc_clCreateBuffer (device_param->context, CL_MEM_READ_WRITE,  size_hooks,   NULL);
       device_param->d_bitmap_s1_a   = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY,   bitmap_size,  NULL);
@@ -13852,6 +13914,7 @@ int main (int argc, char **argv)
 
       run_kernel_bzero (device_param, device_param->d_pws_buf,        size_pws);
       run_kernel_bzero (device_param, device_param->d_pws_amp_buf,    size_pws);
+      run_kernel_bzero (device_param, device_param->d_rules_c,        size_rules_c);
       run_kernel_bzero (device_param, device_param->d_tmps,           size_tmps);
       run_kernel_bzero (device_param, device_param->d_hooks,          size_hooks);
       run_kernel_bzero (device_param, device_param->d_plain_bufs,     size_plains);
@@ -13863,12 +13926,9 @@ int main (int argc, char **argv)
 
       if (attack_kern == ATTACK_KERN_STRAIGHT)
       {
-        device_param->d_rules   = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY, size_rules,   NULL);
-        device_param->d_rules_c = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY, size_rules_c, NULL);
+        device_param->d_rules = hc_clCreateBuffer (device_param->context, CL_MEM_READ_ONLY, size_rules,   NULL);
 
         hc_clEnqueueWriteBuffer (device_param->command_queue, device_param->d_rules, CL_TRUE, 0, size_rules, kernel_rules_buf, 0, NULL, NULL);
-
-        run_kernel_bzero (device_param, device_param->d_rules_c,     size_rules_c);
       }
       else if (attack_kern == ATTACK_KERN_COMBI)
       {
@@ -14449,6 +14509,7 @@ int main (int argc, char **argv)
 
       char *hash_type = strhashtype (data.hash_mode); // not a bug
 
+      log_info ("Hashmode: %u", data.hash_mode);
       log_info ("Hashtype: %s", hash_type);
       log_info ("Workload: %u loops, %u accel", kernel_loops, kernel_accel);
       log_info ("");
@@ -15660,9 +15721,10 @@ int main (int argc, char **argv)
           device_param->innerloop_left = 0;
 
           // some more resets:
-
+if (device_param->pw_caches)
           memset (device_param->pw_caches, 0, 64 * sizeof (pw_cache_t));
 
+if (device_param->pws_buf)
           memset (device_param->pws_buf, 0, device_param->size_pws);
 
           device_param->pw_cnt  = 0;

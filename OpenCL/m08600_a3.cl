@@ -58,7 +58,11 @@ __constant u32 lotus_magic_table[256] =
 
 #define BOX(S,i) (S)[(i)]
 
+#ifdef IS_APPLE
+static void lotus_mix (u32 *in, u32 s_lotus_magic_table[256])
+#else
 static void lotus_mix (u32 *in, __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 p = 0;
 
@@ -82,7 +86,11 @@ static void lotus_mix (u32 *in, __local u32 s_lotus_magic_table[256])
   }
 }
 
+#ifdef IS_APPLE
+static void lotus_transform_password (u32 in[4], u32 out[4], u32 s_lotus_magic_table[256])
+#else
 static void lotus_transform_password (u32 in[4], u32 out[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 t = out[3] >> 24;
 
@@ -177,7 +185,11 @@ static void pad (u32 w[4], const u32 len)
   }
 }
 
+#ifdef IS_APPLE
+static void mdtransform_norecalc (u32 state[4], u32 block[4], u32 s_lotus_magic_table[256])
+#else
 static void mdtransform_norecalc (u32 state[4], u32 block[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 x[12];
 
@@ -202,14 +214,22 @@ static void mdtransform_norecalc (u32 state[4], u32 block[4], __local u32 s_lotu
   state[3] = x[3];
 }
 
+#ifdef IS_APPLE
+static void mdtransform (u32 state[4], u32 checksum[4], u32 block[4], u32 s_lotus_magic_table[256])
+#else
 static void mdtransform (u32 state[4], u32 checksum[4], u32 block[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   mdtransform_norecalc (state, block, s_lotus_magic_table);
 
   lotus_transform_password (block, checksum, s_lotus_magic_table);
 }
 
+#ifdef IS_APPLE
+static void domino_big_md (const u32 saved_key[16], const u32 size, u32 state[4], u32 s_lotus_magic_table[256])
+#else
 static void domino_big_md (const u32 saved_key[16], const u32 size, u32 state[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 checksum[4];
 
@@ -230,7 +250,11 @@ static void domino_big_md (const u32 saved_key[16], const u32 size, u32 state[4]
   mdtransform_norecalc (state, checksum, s_lotus_magic_table);
 }
 
+#ifdef IS_APPLE
+static void m08600m (u32 s_lotus_magic_table[256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __constant u32 * words_buf_r, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#else
 static void m08600m (__local u32 s_lotus_magic_table[256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __constant u32 * words_buf_r, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#endif
 {
   /**
    * modifier
@@ -309,7 +333,11 @@ static void m08600m (__local u32 s_lotus_magic_table[256], u32 w[16], const u32 
   }
 }
 
+#ifdef IS_APPLE
+static void m08600s (u32 s_lotus_magic_table[256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __constant u32 * words_buf_r, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#else
 static void m08600s (__local u32 s_lotus_magic_table[256], u32 w[16], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __constant u32 * words_buf_r, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
+#endif
 {
   /**
    * modifier
@@ -436,7 +464,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08600_m04 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];
@@ -490,7 +522,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08600_m08 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];
@@ -544,7 +580,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08600_m16 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];
@@ -598,7 +638,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08600_s04 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];
@@ -652,7 +696,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08600_s08 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];
@@ -706,7 +754,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08600_s16 (__glo
 
   const u32 lid4 = lid * 4;
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];

@@ -20,6 +20,7 @@
 #define COMPARE_S "OpenCL/check_single_comp4.c"
 #define COMPARE_M "OpenCL/check_multi_comp4.c"
 
+#ifndef IS_APPLE
 __constant u32 padding[8] =
 {
   0x5e4ebf28,
@@ -31,6 +32,7 @@ __constant u32 padding[8] =
   0xfea90c2f,
   0x7a695364
 };
+#endif
 
 typedef struct
 {
@@ -40,7 +42,11 @@ typedef struct
 
 } RC4_KEY;
 
+#ifdef IS_APPLE
+static void swap (RC4_KEY *rc4_key, const u8 i, const u8 j)
+#else
 static void swap (__local RC4_KEY *rc4_key, const u8 i, const u8 j)
+#endif
 {
   u8 tmp;
 
@@ -49,12 +55,20 @@ static void swap (__local RC4_KEY *rc4_key, const u8 i, const u8 j)
   rc4_key->S[j] = tmp;
 }
 
+#ifdef IS_APPLE
+static void rc4_init_16 (RC4_KEY *rc4_key, const u32 data[4])
+#else
 static void rc4_init_16 (__local RC4_KEY *rc4_key, const u32 data[4])
+#endif
 {
   u32 v = 0x03020100;
   u32 a = 0x04040404;
 
+  #ifdef IS_APPLE
+  u32 *ptr = (u32 *) rc4_key->S;
+  #else
   __local u32 *ptr = (__local u32 *) rc4_key->S;
+  #endif
 
   #pragma unroll
   for (u32 i = 0; i < 64; i++)
@@ -101,7 +115,11 @@ static void rc4_init_16 (__local RC4_KEY *rc4_key, const u32 data[4])
   }
 }
 
+#ifdef IS_APPLE
+static u8 rc4_next_16 (RC4_KEY *rc4_key, u8 i, u8 j, const u32 in[4], u32 out[4])
+#else
 static u8 rc4_next_16 (__local RC4_KEY *rc4_key, u8 i, u8 j, const u32 in[4], u32 out[4])
+#endif
 {
   #pragma unroll
   for (u32 k = 0; k < 4; k++)
@@ -176,7 +194,7 @@ static void md5_transform (const u32 w0[4], const u32 w1[4], const u32 w2[4], co
   u32 we_t = w3[2];
   u32 wf_t = w3[3];
 
-  u32 tmp2;
+  //u32 tmp2;
 
   MD5_STEP (MD5_Fo, a, b, c, d, w0_t, MD5C00, MD5S00);
   MD5_STEP (MD5_Fo, d, a, b, c, w1_t, MD5C01, MD5S01);
@@ -254,12 +272,26 @@ static void md5_transform (const u32 w0[4], const u32 w1[4], const u32 w2[4], co
 
 __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10500_init (__global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global pdf14_tmp_t *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 rules_cnt, const u32 digests_cnt, const u32 digests_offset, const u32 combs_mode, const u32 gid_max)
 {
+  #ifdef IS_APPLE
+  const u32 padding[8] =
+  {
+    0x5e4ebf28,
+    0x418a754e,
+    0x564e0064,
+    0x0801faff,
+    0xb6002e2e,
+    0x803e68d0,
+    0xfea90c2f,
+    0x7a695364
+  };
+  #endif
+
   /**
    * base
    */
 
   const u32 gid = get_global_id (0);
-  const u32 lid = get_local_id (0);
+  //const u32 lid = get_local_id (0);
 
   if (gid >= gid_max) return;
 
@@ -289,11 +321,15 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10500_init (__gl
   /**
    * shared
    */
-
+/*
+  #ifdef IS_APPLE
+  RC4_KEY rc4_keys[64];
+  RC4_KEY *rc4_key = &rc4_keys[lid];
+  #else
   __local RC4_KEY rc4_keys[64];
-
   __local RC4_KEY *rc4_key = &rc4_keys[lid];
-
+  #endif
+*/
   /**
    * U_buf
    */
@@ -457,9 +493,13 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10500_loop (__gl
    * shared
    */
 
+  #ifdef IS_APPLE
+  RC4_KEY rc4_keys[64];
+  RC4_KEY *rc4_key = &rc4_keys[lid];
+  #else
   __local RC4_KEY rc4_keys[64];
-
   __local RC4_KEY *rc4_key = &rc4_keys[lid];
+  #endif
 
   /**
    * loop

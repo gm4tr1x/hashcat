@@ -128,7 +128,7 @@ static void m00020m (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_le
      * md5
      */
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -333,7 +333,7 @@ static void m00020s (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_le
      * md5
      */
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;

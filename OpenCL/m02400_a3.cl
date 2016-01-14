@@ -120,7 +120,7 @@ static void m02400m (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
 
     const u32 w0 = w0l | w0r;
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -321,7 +321,7 @@ static void m02400s (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
 
     const u32 w0 = w0l | w0r;
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;

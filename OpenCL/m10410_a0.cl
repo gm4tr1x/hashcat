@@ -42,7 +42,11 @@ typedef struct
 
 } RC4_KEY;
 
+#ifdef IS_APPLE
+static void swap (RC4_KEY *rc4_key, const u8 i, const u8 j)
+#else
 static void swap (__local RC4_KEY *rc4_key, const u8 i, const u8 j)
+#endif
 {
   u8 tmp;
 
@@ -51,12 +55,20 @@ static void swap (__local RC4_KEY *rc4_key, const u8 i, const u8 j)
   rc4_key->S[j] = tmp;
 }
 
+#ifdef IS_APPLE
+static void rc4_init_16 (RC4_KEY *rc4_key, const u32 data[4])
+#else
 static void rc4_init_16 (__local RC4_KEY *rc4_key, const u32 data[4])
+#endif
 {
   u32 v = 0x03020100;
   u32 a = 0x04040404;
 
+  #ifdef IS_APPLE
+  u32 *ptr = (u32 *) rc4_key->S;
+  #else
   __local u32 *ptr = (__local u32 *) rc4_key->S;
+  #endif
 
   #pragma unroll
   for (u32 i = 0; i < 64; i++)
@@ -85,7 +97,11 @@ static void rc4_init_16 (__local RC4_KEY *rc4_key, const u32 data[4])
   j += rc4_key->S[255] + d0; swap (rc4_key, 255, j);
 }
 
+#ifdef IS_APPLE
+static u8 rc4_next_16 (RC4_KEY *rc4_key, u8 i, u8 j, const u32 in[4], u32 out[4])
+#else
 static u8 rc4_next_16 (__local RC4_KEY *rc4_key, u8 i, u8 j, __constant u32 in[4], u32 out[4])
+#endif
 {
   for (u32 k = 0; k < 4; k++)
   {
@@ -171,8 +187,13 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_m04 (__glo
    * key
    */
 
+  #ifdef IS_APPLE
+  RC4_KEY rc4_keys[64];
+  RC4_KEY *rc4_key = &rc4_keys[lid];
+  #else
   __local RC4_KEY rc4_keys[64];
   __local RC4_KEY *rc4_key = &rc4_keys[lid];
+  #endif
 
   /**
    * loop
@@ -290,8 +311,13 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_s04 (__glo
    * key
    */
 
+  #ifdef IS_APPLE
+  RC4_KEY rc4_keys[64];
+  RC4_KEY *rc4_key = &rc4_keys[lid];
+  #else
   __local RC4_KEY rc4_keys[64];
   __local RC4_KEY *rc4_key = &rc4_keys[lid];
+  #endif
 
   /**
    * loop

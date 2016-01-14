@@ -187,7 +187,7 @@ static void m00010m (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
 
     const u32 w0 = w0l | w0r;
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;
@@ -413,7 +413,7 @@ static void m00010s (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
     const u32 pre_b = b_rev - (pre_a ^ pre_cd);
     const u32 pre_c = c_rev - (pre_a ^ pre_b ^ pre_d);
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD5M_A;
     u32 b = MD5M_B;

@@ -65,7 +65,11 @@ __constant u32 lotus_magic_table[256] =
 
 #define uint_to_hex_upper8(i) l_bin2asc[(i)]
 
+#ifdef IS_APPLE
+static void lotus_mix (u32 *in, u32 s_lotus_magic_table[256])
+#else
 static void lotus_mix (u32 *in, __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 p = 0;
 
@@ -89,7 +93,11 @@ static void lotus_mix (u32 *in, __local u32 s_lotus_magic_table[256])
   }
 }
 
+#ifdef IS_APPLE
+static void lotus_transform_password (u32 in[4], u32 out[4], u32 s_lotus_magic_table[256])
+#else
 static void lotus_transform_password (u32 in[4], u32 out[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 t = out[3] >> 24;
 
@@ -184,7 +192,11 @@ static void pad (u32 w[4], const u32 len)
   }
 }
 
+#ifdef IS_APPLE
+static void mdtransform_norecalc (u32 state[4], u32 block[4], u32 s_lotus_magic_table[256])
+#else
 static void mdtransform_norecalc (u32 state[4], u32 block[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 x[12];
 
@@ -209,14 +221,22 @@ static void mdtransform_norecalc (u32 state[4], u32 block[4], __local u32 s_lotu
   state[3] = x[3];
 }
 
+#ifdef IS_APPLE
+static void mdtransform (u32 state[4], u32 checksum[4], u32 block[4], u32 s_lotus_magic_table[256])
+#else
 static void mdtransform (u32 state[4], u32 checksum[4], u32 block[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   mdtransform_norecalc (state, block, s_lotus_magic_table);
 
   lotus_transform_password (block, checksum, s_lotus_magic_table);
 }
 
+#ifdef IS_APPLE
+static void domino_big_md (const u32 saved_key[16], const u32 size, u32 state[4], u32 s_lotus_magic_table[256])
+#else
 static void domino_big_md (const u32 saved_key[16], const u32 size, u32 state[4], __local u32 s_lotus_magic_table[256])
+#endif
 {
   u32 checksum[4];
 
@@ -245,7 +265,7 @@ static void domino_big_md (const u32 saved_key[16], const u32 size, u32 state[4]
     mdtransform (state, checksum, block, s_lotus_magic_table);
   }
 
-  u32 left = size - curpos;
+  //u32 left = size - curpos;
 
   block[0] = saved_key[idx + 0];
   block[1] = saved_key[idx + 1];
@@ -580,7 +600,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m09100_init (__gl
    * bin2asc table
    */
 
+  #ifdef IS_APPLE
+  u32 l_bin2asc[256];
+  #else
   __local u32 l_bin2asc[256];
+  #endif
 
   const u32 lid4 = lid * 4;
 
@@ -613,7 +637,11 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m09100_init (__gl
    * sbox
    */
 
+  #ifdef IS_APPLE
+  u32 s_lotus_magic_table[256];
+  #else
   __local u32 s_lotus_magic_table[256];
+  #endif
 
   s_lotus_magic_table[lid4 + 0] = lotus_magic_table[lid4 + 0];
   s_lotus_magic_table[lid4 + 1] = lotus_magic_table[lid4 + 1];

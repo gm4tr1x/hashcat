@@ -52,7 +52,7 @@ RM                       := rm
 INSTALL                  := install
 
 CC_NATIVE                := gcc
-CC_NATIVE_OSX            := gcc
+CC_OSX                   := gcc
 
 ##
 ## Cross compiler paths
@@ -81,8 +81,8 @@ NOW                      := $(shell date +%s)
 ## Compiler flags
 ##
 
-CFLAGS                   := -O2 -pipe -W -Wall -std=c99 -Iinclude/
-#CFLAGS                   := -g -pipe -W -Wall -std=c99 -Iinclude/
+#CFLAGS                   := -O2 -pipe -W -Wall -std=c99 -Iinclude/
+CFLAGS                   := -g -ggdb -pipe -W -Wall -std=c99 -Iinclude/
 
 ##
 ## Native compilation target
@@ -95,11 +95,12 @@ CFLAGS_NATIVE            += -I$(NVML)/
 
 LFLAGS_NATIVE            := -lpthread -lOpenCL -ldl
 
-CFLAGS_NATIVE_OSX        := -D_POSIX -DOSX
-CFLAGS_NATIVE_OSX        += $(CFLAGS) -mmacosx-version-min=10.5 -g -ggdb
-CFLAGS_NATIVE_OSX        += -I$(OPENCL_HEADERS_KHRONOS)/
+CFLAGS_OSX               := -D_POSIX -DOSX
+CFLAGS_OSX               += $(CFLAGS) -mmacosx-version-min=10.5
+#CFLAGS_OSX              += $(CFLAGS) -mmacosx-version-min=10.5 -g -ggdb
+CFLAGS_OSX               += -I$(OPENCL_HEADERS_KHRONOS)/
 
-LFLAGS_NATIVE_OSX        := -framework OpenCL -lpthread -ldl
+LFLAGS_OSX               := -framework OpenCL -lpthread -ldl
 ##
 ## Cross compilation target
 ##
@@ -134,7 +135,7 @@ LFLAGS_CROSS_WIN         := -lpsapi
 ##
 
 native: oclHashcat
-native-osx: oclHashcat.app
+osx: oclHashcat.app
 
 binaries: linux32 linux64 win32 win64
 
@@ -208,11 +209,11 @@ obj/%.oclHashcat.NATIVE.o: src/%.c
 oclHashcat: src/oclHashcat.c obj/ext_OpenCL.oclHashcat.NATIVE.o obj/ext_nvml.oclHashcat.NATIVE.o obj/ext_ADL.oclHashcat.NATIVE.o obj/shared.oclHashcat.NATIVE.o obj/rp_kernel_on_cpu.oclHashcat.NATIVE.o
 	$(CC_NATIVE) $(CFLAGS_NATIVE)    -o $@ $^ $(LFLAGS_NATIVE) -DCOMPTIME=$(NOW) -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 
-obj/%.oclHashcat.app.NATIVE.OSX.o: src/%.c
-	$(CC_NATIVE_OSX) $(CFLAGS_NATIVE_OSX) -c -o $@ $<
+obj/%.oclHashcat.app.OSX.o: src/%.c
+	$(CC_OSX) $(CFLAGS_OSX) -c -o $@ $<
 
-oclHashcat.app: src/oclHashcat.c obj/ext_OpenCL.oclHashcat.app.NATIVE.OSX.o obj/shared.oclHashcat.app.NATIVE.OSX.o obj/rp_kernel_on_cpu.oclHashcat.app.NATIVE.OSX.o
-	$(CC_NATIVE_OSX) $(CFLAGS_NATIVE_OSX) -o $@ $^ $(LFLAGS_NATIVE_OSX) -DCOMPTIME=$(NOW) -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
+oclHashcat.app: src/oclHashcat.c obj/ext_OpenCL.oclHashcat.app.OSX.o obj/shared.oclHashcat.app.OSX.o obj/rp_kernel_on_cpu.oclHashcat.app.OSX.o
+	$(CC_OSX) $(CFLAGS_OSX) -o $@ $^ $(LFLAGS_OSX) -DCOMPTIME=$(NOW) -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 
 ##
 ## cross compiled oclHashcat for binary release version

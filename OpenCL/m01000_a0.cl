@@ -102,7 +102,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m01000_m04 (__glo
 
     w3_t[2] = out_len * 8 * 2;
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD4M_A;
     u32 b = MD4M_B;
@@ -269,7 +269,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m01000_s04 (__glo
 
     w3_t[2] = out_len * 8 * 2;
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD4M_A;
     u32 b = MD4M_B;

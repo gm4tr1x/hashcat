@@ -111,7 +111,7 @@ static void m01000m (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
 
     const u32 w0 = w0l | w0r;
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD4M_A;
     u32 b = MD4M_B;
@@ -306,7 +306,7 @@ static void m01000s (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
     pre_b = pre_b - MD4_G (sav_c, sav_d, pre_a);
     pre_c = pre_c - MD4_G (sav_d, pre_a, pre_b);
 
-    u32 tmp2;
+    //u32 tmp2;
 
     u32 a = MD4M_A;
     u32 b = MD4M_B;
