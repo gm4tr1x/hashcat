@@ -20,6 +20,7 @@
 #define COMPARE_S "OpenCL/check_single_comp4.c"
 #define COMPARE_M "OpenCL/check_multi_comp4.c"
 
+
 #define INITVAL 0
 
 #define SBOG_LPSti64                         \
@@ -2226,11 +2227,7 @@ __constant u64 sbob_rc64[12][8] =
   },
 };
 
-#ifdef IS_APPLE
-static void streebog_g (u64 h[8], const u64 m[8], u64 s_sbob_sl64[8][256])
-#else
-static void streebog_g (u64 h[8], const u64 m[8], __local u64 s_sbob_sl64[8][256])
-#endif
+static void streebog_g (u64 h[8], const u64 m[8], __L u64 s_sbob_sl64[8][256])
 {
   u64 k[8];
   u64 s[8];
@@ -2300,11 +2297,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m04 (__glo
 
   const u32 lid4 = lid * 4;
 
-  #ifdef IS_APPLE
-  u64 s_sbob_sl64[8][256];
-  #else
-  __local u64 s_sbob_sl64[8][256];
-  #endif
+  __L u64 s_sbob_sl64[8][256];
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];
@@ -2528,17 +2521,14 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s04 (__glo
 
   const u32 lid = get_local_id (0);
 
+
   /**
    * shared lookup table
    */
 
   const u32 lid4 = lid * 4;
 
-  #ifdef IS_APPLE
-  u64 s_sbob_sl64[8][256];
-  #else
-  __local u64 s_sbob_sl64[8][256];
-  #endif
+  __L u64 s_sbob_sl64[8][256];
 
   s_sbob_sl64[0][lid4 + 0] = sbob_sl64[0][lid4 + 0];
   s_sbob_sl64[0][lid4 + 1] = sbob_sl64[0][lid4 + 1];

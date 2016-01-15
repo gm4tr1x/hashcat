@@ -175,11 +175,7 @@ static void sha256_transform_z (u32 digest[8])
   digest[7] += h;
 }
 
-#ifdef IS_APPLE
-static void sha256_transform_s (u32 digest[8], u32 w[64])
-#else
-static void sha256_transform_s (u32 digest[8], __local u32 w[64])
-#endif
+static void sha256_transform_s (u32 digest[8], __L u32 w[64])
 {
   u32 a = digest[0];
   u32 b = digest[1];
@@ -289,13 +285,8 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08000_m04 (__glo
    * precompute final msg blocks
    */
 
-  #ifdef IS_APPLE
-  u32 w_s1[64];
-  u32 w_s2[64];
-  #else
-  __local u32 w_s1[64];
-  __local u32 w_s2[64];
-  #endif
+  __L u32 w_s1[64];
+  __L u32 w_s2[64];
 
   w_s1[lid] = 0;
   w_s2[lid] = 0;
@@ -541,13 +532,8 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m08000_s04 (__glo
    * precompute final msg blocks
    */
 
-  #ifdef IS_APPLE
-  u32 w_s1[64];
-  u32 w_s2[64];
-  #else
-  __local u32 w_s1[64];
-  __local u32 w_s2[64];
-  #endif
+  __L u32 w_s1[64];
+  __L u32 w_s2[64];
 
   w_s1[lid] = 0;
   w_s2[lid] = 0;

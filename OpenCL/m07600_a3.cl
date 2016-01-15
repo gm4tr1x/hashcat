@@ -22,11 +22,7 @@
 
 #define uint_to_hex_lower8(i) l_bin2asc[(i)]
 
-#ifdef IS_APPLE
-static void m07600m (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
-#else
-static void m07600m (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
-#endif
+static void m07600m (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __L u32 l_bin2asc[256])
 {
   /**
    * modifier
@@ -527,11 +523,7 @@ static void m07600m (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_le
   }
 }
 
-#ifdef IS_APPLE
-static void m07600s (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, u32 l_bin2asc[256])
-#else
-static void m07600s (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __local u32 l_bin2asc[256])
-#endif
+static void m07600s (u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global void *esalt_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset, __L u32 l_bin2asc[256])
 {
   /**
    * modifier
@@ -1093,11 +1085,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07600_m04 (__glo
    * bin2asc table
    */
 
-  #ifdef IS_APPLE
-  u32 l_bin2asc[256];
-  #else
-  __local u32 l_bin2asc[256];
-  #endif
+  __L u32 l_bin2asc[256];
 
   const u32 lid4 = lid * 4;
 
@@ -1183,11 +1171,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07600_m08 (__glo
    * bin2asc table
    */
 
-  #ifdef IS_APPLE
-  u32 l_bin2asc[256];
-  #else
-  __local u32 l_bin2asc[256];
-  #endif
+  __L u32 l_bin2asc[256];
 
   const u32 lid4 = lid * 4;
 
@@ -1273,11 +1257,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07600_m16 (__glo
    * bin2asc table
    */
 
-  #ifdef IS_APPLE
-  u32 l_bin2asc[256];
-  #else
-  __local u32 l_bin2asc[256];
-  #endif
+  __L u32 l_bin2asc[256];
 
   const u32 lid4 = lid * 4;
 
@@ -1363,11 +1343,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07600_s04 (__glo
    * bin2asc table
    */
 
-  #ifdef IS_APPLE
-  u32 l_bin2asc[256];
-  #else
-  __local u32 l_bin2asc[256];
-  #endif
+  __L u32 l_bin2asc[256];
 
   const u32 lid4 = lid * 4;
 
@@ -1453,11 +1429,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07600_s08 (__glo
    * bin2asc table
    */
 
-  #ifdef IS_APPLE
-  u32 l_bin2asc[256];
-  #else
-  __local u32 l_bin2asc[256];
-  #endif
+  __L u32 l_bin2asc[256];
 
   const u32 lid4 = lid * 4;
 
@@ -1543,11 +1515,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m07600_s16 (__glo
    * bin2asc table
    */
 
-  #ifdef IS_APPLE
-  u32 l_bin2asc[256];
-  #else
-  __local u32 l_bin2asc[256];
-  #endif
+  __L u32 l_bin2asc[256];
 
   const u32 lid4 = lid * 4;
 

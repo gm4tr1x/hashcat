@@ -89,12 +89,8 @@ static void m10100m (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
 
     v0 ^= m;
 
-    #ifdef IS_APPLE
     u32 i;
-    #else
-    int i;
-    #endif
-    int j;
+    u32 j;
 
     for (i = 8, j = 2; i <= pw_len; i += 8, j += 2)
     {
@@ -194,12 +190,8 @@ static void m10100s (u32 w[16], const u32 pw_len, __global pw_t *pws, __global k
 
     v0 ^= m;
 
-    #ifdef IS_APPLE
     u32 i;
-    #else
-    int i;
-    #endif
-    int j;
+    u32 j;
 
     for (i = 8, j = 2; i <= pw_len; i += 8, j += 2)
     {

@@ -20,8 +20,8 @@
 #define COMPARE_S "OpenCL/check_single_comp4.c"
 #define COMPARE_M "OpenCL/check_multi_comp4.c"
 
-#define md5apr1_magic0 0x72706124
-#define md5apr1_magic1 0x00002431
+#define md5apr1_magic0 0x72706124u
+#define md5apr1_magic1 0x00002431u
 
 static void md5_transform (const u32 w0[4], const u32 w1[4], const u32 w2[4], const u32 w3[4], u32 digest[4])
 {

@@ -2951,14 +2951,23 @@ void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint
        * result
        */
 
-//      if (benchmark == 0)
-//      {
+      #ifdef OSX
+      if (data.benchmark == 1 &&
+         (data.hash_mode == 5500 || data.hash_mode == 8500 ||
+          data.hash_mode == 8600 || data.hash_mode == 3100 || data.hash_mode == 8700 ||
+          data.hash_mode == 12400))
+      {
+        // TODO: skip error in 11800 benchmark
+      }
+      else
+      #endif
+      {
         hc_thread_mutex_lock (mux_display);
 
         check_cracked (device_param, salt_pos);
 
         hc_thread_mutex_unlock (mux_display);
-//      }
+      }
 
       /**
        * progress
@@ -11486,13 +11495,14 @@ int main (int argc, char **argv)
         if (kernel_accel >  256) kernel_accel =  256; // causes memory problems otherwise
       }
 
+      #ifdef OSX
       // some algorithm collide too slow, take more time
-
-      if (benchmark == 1 && (hash_mode == 11600 || hash_mode == 13000 || hash_mode == 11300))
+      if (benchmark == 1 && (hash_mode == 11600 || hash_mode == 13000 || hash_mode == 11300 || hash_mode == 6231))
       {
-          runtime += 10;
+          runtime += 15;
           data.runtime = runtime;
       }
+      #endif
 
       if ((opts_type & OPTS_TYPE_PT_BITSLICE) && (attack_mode == ATTACK_MODE_BF))
       {
@@ -12804,8 +12814,6 @@ int main (int argc, char **argv)
 
       if (device_type & CL_DEVICE_TYPE_CPU)
       {
-//        cl_uint device_processor_cores = 1;
-//        device_param->device_processor_cores = device_processor_cores;
       }
 
       if (device_type & CL_DEVICE_TYPE_GPU)

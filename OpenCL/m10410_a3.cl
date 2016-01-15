@@ -21,7 +21,7 @@
 #define COMPARE_M "OpenCL/check_multi_comp4.c"
 
 #ifndef IS_APPLE
-__constant u32 padding[8] =
+__C u32 padding[8] =
 {
   0x5e4ebf28,
   0x418a754e,
@@ -42,11 +42,7 @@ typedef struct
 
 } RC4_KEY;
 
-#ifdef IS_APPLE
-static void swap (RC4_KEY *rc4_key, const u8 i, const u8 j)
-#else
-static void swap (__local RC4_KEY *rc4_key, const u8 i, const u8 j)
-#endif
+static void swap (__L RC4_KEY *rc4_key, const u8 i, const u8 j)
 {
   u8 tmp;
 
@@ -55,20 +51,12 @@ static void swap (__local RC4_KEY *rc4_key, const u8 i, const u8 j)
   rc4_key->S[j] = tmp;
 }
 
-#ifdef IS_APPLE
-static void rc4_init_16 (RC4_KEY *rc4_key, const u32 data[4])
-#else
-static void rc4_init_16 (__local RC4_KEY *rc4_key, const u32 data[4])
-#endif
+static void rc4_init_16 (__L RC4_KEY *rc4_key, const u32 data[4])
 {
   u32 v = 0x03020100;
   u32 a = 0x04040404;
 
-  #ifdef IS_APPLE
-  u32 *ptr = (u32 *) rc4_key->S;
-  #else
-  __local u32 *ptr = (__local u32 *) rc4_key->S;
-  #endif
+  __L u32 *ptr = (__L u32 *) rc4_key->S;
 
   #pragma unroll
   for (u32 i = 0; i < 64; i++)
@@ -97,11 +85,7 @@ static void rc4_init_16 (__local RC4_KEY *rc4_key, const u32 data[4])
   j += rc4_key->S[255] + d0; swap (rc4_key, 255, j);
 }
 
-#ifdef IS_APPLE
-static u8 rc4_next_16 (RC4_KEY *rc4_key, u8 i, u8 j, const u32 in[4], u32 out[4])
-#else
-static u8 rc4_next_16 (__local RC4_KEY *rc4_key, u8 i, u8 j, __constant u32 in[4], u32 out[4])
-#endif
+static u8 rc4_next_16 (__L RC4_KEY *rc4_key, u8 i, u8 j, __C u32 in[4], u32 out[4])
 {
   for (u32 k = 0; k < 4; k++)
   {
@@ -151,14 +135,10 @@ static u8 rc4_next_16 (__local RC4_KEY *rc4_key, u8 i, u8 j, __constant u32 in[4
   return j;
 }
 
-#ifdef IS_APPLE
-static void m10410m (RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
-#else
-static void m10410m (__local RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
-#endif
+static void m10410m (__L RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
 {
   #ifdef IS_APPLE
-  const u32 padding[8] =
+  __C u32 padding[8] =
   {
     0x5e4ebf28,
     0x418a754e,
@@ -178,11 +158,7 @@ static void m10410m (__local RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[
   const u32 gid = get_global_id (0);
   const u32 lid = get_local_id (0);
 
-  #ifdef IS_APPLE
-  RC4_KEY *rc4_key = &rc4_keys[lid];
-  #else
-  __local RC4_KEY *rc4_key = &rc4_keys[lid];
-  #endif
+  __L RC4_KEY *rc4_key = &rc4_keys[lid];
 
   /**
    * loop
@@ -220,14 +196,10 @@ static void m10410m (__local RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[
   }
 }
 
-#ifdef IS_APPLE
-static void m10410s (RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
-#else
-static void m10410s (__local RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
-#endif
+static void m10410s (__L RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[4], u32 w3[4], const u32 pw_len, __global pw_t *pws, __global kernel_rule_t *rules_buf, __global comb_t *combs_buf, __global bf_t *bfs_buf, __global void *tmps, __global void *hooks, __global u32 *bitmaps_buf_s1_a, __global u32 *bitmaps_buf_s1_b, __global u32 *bitmaps_buf_s1_c, __global u32 *bitmaps_buf_s1_d, __global u32 *bitmaps_buf_s2_a, __global u32 *bitmaps_buf_s2_b, __global u32 *bitmaps_buf_s2_c, __global u32 *bitmaps_buf_s2_d, __global plain_t *plains_buf, __global digest_t *digests_buf, __global u32 *hashes_shown, __global salt_t *salt_bufs, __global pdf_t *pdf_bufs, __global u32 *d_return_buf, __global u32 *d_scryptV_buf, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2, const u32 salt_pos, const u32 loop_pos, const u32 loop_cnt, const u32 bfs_cnt, const u32 digests_cnt, const u32 digests_offset)
 {
   #ifdef IS_APPLE
-  const u32 padding[8] =
+  __C u32 padding[8] =
   {
     0x5e4ebf28,
     0x418a754e,
@@ -247,11 +219,7 @@ static void m10410s (__local RC4_KEY rc4_keys[64], u32 w0[4], u32 w1[4], u32 w2[
   const u32 gid = get_global_id (0);
   const u32 lid = get_local_id (0);
 
-  #ifdef IS_APPLE
-  RC4_KEY *rc4_key = &rc4_keys[lid];
-  #else
-  __local RC4_KEY *rc4_key = &rc4_keys[lid];
-  #endif
+  __L RC4_KEY *rc4_key = &rc4_keys[lid];
 
   /**
    * digest
@@ -345,11 +313,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_m04 (__glo
    * main
    */
 
-  #ifdef IS_APPLE
-  RC4_KEY rc4_keys[64];
-  #else
-  __local RC4_KEY rc4_keys[64];
-  #endif
+  __L RC4_KEY rc4_keys[64];
 
   m10410m (rc4_keys, w0, w1, w2, w3, pw_len, pws, rules_buf, combs_buf, bfs_buf, tmps, hooks, bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d, bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d, plains_buf, digests_buf, hashes_shown, salt_bufs, pdf_bufs, d_return_buf, d_scryptV_buf, bitmap_mask, bitmap_shift1, bitmap_shift2, salt_pos, loop_pos, loop_cnt, bfs_cnt, digests_cnt, digests_offset);
 }
@@ -398,11 +362,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_m08 (__glo
    * main
    */
 
-  #ifdef IS_APPLE
-  RC4_KEY rc4_keys[64];
-  #else
-  __local RC4_KEY rc4_keys[64];
-  #endif
+  __L RC4_KEY rc4_keys[64];
 
   m10410m (rc4_keys, w0, w1, w2, w3, pw_len, pws, rules_buf, combs_buf, bfs_buf, tmps, hooks, bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d, bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d, plains_buf, digests_buf, hashes_shown, salt_bufs, pdf_bufs, d_return_buf, d_scryptV_buf, bitmap_mask, bitmap_shift1, bitmap_shift2, salt_pos, loop_pos, loop_cnt, bfs_cnt, digests_cnt, digests_offset);
 }
@@ -451,11 +411,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_m16 (__glo
    * main
    */
 
-  #ifdef IS_APPLE
-  RC4_KEY rc4_keys[64];
-  #else
-  __local RC4_KEY rc4_keys[64];
-  #endif
+  __L RC4_KEY rc4_keys[64];
 
   m10410m (rc4_keys, w0, w1, w2, w3, pw_len, pws, rules_buf, combs_buf, bfs_buf, tmps, hooks, bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d, bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d, plains_buf, digests_buf, hashes_shown, salt_bufs, pdf_bufs, d_return_buf, d_scryptV_buf, bitmap_mask, bitmap_shift1, bitmap_shift2, salt_pos, loop_pos, loop_cnt, bfs_cnt, digests_cnt, digests_offset);
 }
@@ -504,11 +460,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_s04 (__glo
    * main
    */
 
-  #ifdef IS_APPLE
-  RC4_KEY rc4_keys[64];
-  #else
-  __local RC4_KEY rc4_keys[64];
-  #endif
+  __L RC4_KEY rc4_keys[64];
 
   m10410s (rc4_keys, w0, w1, w2, w3, pw_len, pws, rules_buf, combs_buf, bfs_buf, tmps, hooks, bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d, bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d, plains_buf, digests_buf, hashes_shown, salt_bufs, pdf_bufs, d_return_buf, d_scryptV_buf, bitmap_mask, bitmap_shift1, bitmap_shift2, salt_pos, loop_pos, loop_cnt, bfs_cnt, digests_cnt, digests_offset);
 }
@@ -557,11 +509,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_s08 (__glo
    * main
    */
 
-  #ifdef IS_APPLE
-  RC4_KEY rc4_keys[64];
-  #else
-  __local RC4_KEY rc4_keys[64];
-  #endif
+  __L RC4_KEY rc4_keys[64];
 
   m10410s (rc4_keys, w0, w1, w2, w3, pw_len, pws, rules_buf, combs_buf, bfs_buf, tmps, hooks, bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d, bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d, plains_buf, digests_buf, hashes_shown, salt_bufs, pdf_bufs, d_return_buf, d_scryptV_buf, bitmap_mask, bitmap_shift1, bitmap_shift2, salt_pos, loop_pos, loop_cnt, bfs_cnt, digests_cnt, digests_offset);
 }
@@ -610,11 +558,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m10410_s16 (__glo
    * main
    */
 
-  #ifdef IS_APPLE
-  RC4_KEY rc4_keys[64];
-  #else
-  __local RC4_KEY rc4_keys[64];
-  #endif
+  __L RC4_KEY rc4_keys[64];
 
   m10410s (rc4_keys, w0, w1, w2, w3, pw_len, pws, rules_buf, combs_buf, bfs_buf, tmps, hooks, bitmaps_buf_s1_a, bitmaps_buf_s1_b, bitmaps_buf_s1_c, bitmaps_buf_s1_d, bitmaps_buf_s2_a, bitmaps_buf_s2_b, bitmaps_buf_s2_c, bitmaps_buf_s2_d, plains_buf, digests_buf, hashes_shown, salt_bufs, pdf_bufs, d_return_buf, d_scryptV_buf, bitmap_mask, bitmap_shift1, bitmap_shift2, salt_pos, loop_pos, loop_cnt, bfs_cnt, digests_cnt, digests_offset);
 }

@@ -1120,11 +1120,7 @@ __constant u32 rcl[R + 1] =
 
 // this is a highly optimized that assumes dgst[16] = { 0 }; only reuse of no 2nd transform is needed
 
-#ifdef IS_APPLE
-static void whirlpool_transform (const u32 w[16], u32 dgst[16], u32 s_Ch[8][256], u32 s_Cl[8][256])
-#else
-static void whirlpool_transform (const u32 w[16], u32 dgst[16], __local u32 s_Ch[8][256], __local u32 s_Cl[8][256])
-#endif
+static void whirlpool_transform (const u32 w[16], u32 dgst[16], __L u32 s_Ch[8][256], __L u32 s_Cl[8][256])
 {
   u32 Kh[8];
   u32 Kl[8];
@@ -1392,8 +1388,8 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m06100_m04 (__glo
    * modifier
    */
 
-  __local u32 s_Ch[8][256];
-  __local u32 s_Cl[8][256];
+  __L u32 s_Ch[8][256];
+  __L u32 s_Cl[8][256];
 
   const u32 lid4 = lid * 4;
 
@@ -1596,8 +1592,8 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m06100_s04 (__glo
    * modifier
    */
 
-  __local u32 s_Ch[8][256];
-  __local u32 s_Cl[8][256];
+  __L u32 s_Ch[8][256];
+  __L u32 s_Cl[8][256];
 
   const u32 lid4 = lid * 4;
 

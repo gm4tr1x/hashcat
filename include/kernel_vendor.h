@@ -41,4 +41,9 @@
 
 #ifdef IS_APPLE
 #define IS_GENERIC
+#define __L
+#define __C const
+#else
+#define __L __local
+#define __C __constant
 #endif

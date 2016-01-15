@@ -1089,11 +1089,7 @@ __constant u32 Cl[8][256] =
 
 #define BOX(S,n,i) (S)[(n)][(i)]
 
-#ifdef IS_APPLE
-static void whirlpool_transform (const u32 w[16], u32 dgst[16], u32 s_Ch[8][256], u32 s_Cl[8][256])
-#else
-static void whirlpool_transform (const u32 w[16], u32 dgst[16], __local u32 s_Ch[8][256], __local u32 s_Cl[8][256])
-#endif
+static void whirlpool_transform (const u32 w[16], u32 dgst[16], __L u32 s_Ch[8][256], __L u32 s_Cl[8][256])
 {
   const u32 rch[R + 1] =
   {
@@ -1289,7 +1285,7 @@ static void whirlpool_transform (const u32 w[16], u32 dgst[16], __local u32 s_Ch
   dgst[15] ^= statel[7] ^ w[15];
 }
 
-static void hmac_run2 (const u32 w1[16], const u32 w2[16], const u32 ipad[16], const u32 opad[16], u32 dgst[16], __local u32 s_Ch[8][256], __local u32 s_Cl[8][256])
+static void hmac_run2 (const u32 w1[16], const u32 w2[16], const u32 ipad[16], const u32 opad[16], u32 dgst[16], __L u32 s_Ch[8][256], __L u32 s_Cl[8][256])
 {
   dgst[ 0] = ipad[ 0];
   dgst[ 1] = ipad[ 1];
@@ -1369,7 +1365,7 @@ static void hmac_run2 (const u32 w1[16], const u32 w2[16], const u32 ipad[16], c
   whirlpool_transform (w, dgst, s_Ch, s_Cl);
 }
 
-static void hmac_init (u32 w[16], u32 ipad[16], u32 opad[16], __local u32 s_Ch[8][256], __local u32 s_Cl[8][256])
+static void hmac_init (u32 w[16], u32 ipad[16], u32 opad[16], __L u32 s_Ch[8][256], __L u32 s_Cl[8][256])
 {
   w[ 0] ^= 0x36363636;
   w[ 1] ^= 0x36363636;
@@ -1530,8 +1526,8 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m06232_init (__gl
    * shared mem
    */
 
-  __local u32 s_Ch[8][256];
-  __local u32 s_Cl[8][256];
+  __L u32 s_Ch[8][256];
+  __L u32 s_Cl[8][256];
 
   const u32 lid = get_local_id (0);
 
@@ -1703,8 +1699,8 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m06232_loop (__gl
 {
   const u32 truecrypt_mdlen = salt_bufs[0].truecrypt_mdlen;
 
-  __local u32 s_Ch[8][256];
-  __local u32 s_Cl[8][256];
+  __L u32 s_Ch[8][256];
+  __L u32 s_Cl[8][256];
 
   const u32 gid = get_global_id (0);
   const u32 lid = get_local_id (0);
