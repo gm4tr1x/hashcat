@@ -629,16 +629,12 @@ const char *USAGE_BIG[] =
   "",
   "[[ Operating-Systems ]]",
   "",
-#ifndef OSX
   "   3000 = LM",
-#endif
   "   1000 = NTLM",
   "   1100 = Domain Cached Credentials (DCC), MS Cache",
   "   2100 = Domain Cached Credentials 2 (DCC2), MS Cache 2",
   "  12800 = MS-AzureSync PBKDF2-HMAC-SHA256",
-#ifndef OSX
   "   1500 = descrypt, DES(Unix), Traditional DES",
-#endif
   "  12400 = BSDiCrypt, Extended DES",
   "    500 = md5crypt $1$, MD5(Unix)",
   "   3200 = bcrypt $2*$, Blowfish(Unix)",
