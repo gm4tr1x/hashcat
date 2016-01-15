@@ -6571,9 +6571,14 @@ int main (int argc, char **argv)
     }
 
     #ifdef OSX
-    if (hash_mode == 3000 || hash_mode == 1500)
+    if ((force == 0) && (hash_mode == 3000 || hash_mode == 1500))
     {
-      log_error ("Hash mode %d is disabled for Apple platform", hash_mode);
+      log_info ("");
+      log_info ("ATTENTION! Hash mode 3000 and 1500 are excluded for Apple platform");
+      log_info ("You are STRONGLY encouraged not to use it");
+      log_info ("You can use --force to override this but do not post error reports if you do so");
+      log_info ("");
+
       return (-1);
     }
     #endif
