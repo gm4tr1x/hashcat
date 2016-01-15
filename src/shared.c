@@ -14,13 +14,7 @@
  */
 
 #define GET_ACCEL(x) KERNEL_ACCEL_ ## x
-
-#ifdef OSX
-#define KERNEL_LOOPS_APPLE 16
-#define GET_LOOPS(x) KERNEL_LOOPS_APPLE
-#else
 #define GET_LOOPS(x) KERNEL_LOOPS_ ## x
-#endif
 
 /**
  * bit rotate
@@ -641,14 +635,14 @@ uint hex_to_uint (const char hex[8])
 {
   uint v = 0;
 
-  v |= hex_convert (hex[7]) <<  0;
-  v |= hex_convert (hex[6]) <<  4;
-  v |= hex_convert (hex[5]) <<  8;
-  v |= hex_convert (hex[4]) << 12;
-  v |= hex_convert (hex[3]) << 16;
-  v |= hex_convert (hex[2]) << 20;
-  v |= hex_convert (hex[1]) << 24;
-  v |= hex_convert (hex[0]) << 28;
+  v |= ((uint) hex_convert (hex[7])) <<  0;
+  v |= ((uint) hex_convert (hex[6])) <<  4;
+  v |= ((uint) hex_convert (hex[5])) <<  8;
+  v |= ((uint) hex_convert (hex[4])) << 12;
+  v |= ((uint) hex_convert (hex[3])) << 16;
+  v |= ((uint) hex_convert (hex[2])) << 20;
+  v |= ((uint) hex_convert (hex[1])) << 24;
+  v |= ((uint) hex_convert (hex[0])) << 28;
 
   return (v);
 }
@@ -2890,7 +2884,7 @@ uint32_t *hm_get_list_valid_adl_adapters (int iNumberAdapters, int *num_adl_adap
   {
     AdapterInfo info = lpAdapterInfo[i];
 
-    if ((info.strUDID == NULL) || (strlen (info.strUDID) < 1)) continue;
+    if (strlen (info.strUDID) < 1) continue;
 
     #ifdef WIN
     if (info.iVendorID !=   1002) continue;
@@ -5388,6 +5382,12 @@ int in_superchop (char *buf)
 
 char **scan_directory (const char *path)
 {
+  if (!path)
+  {
+    log_error ("ERROR: Invalid argument specified");
+    exit (-1);
+  }
+
   char *tmp_path = mystrdup (path);
 
   size_t tmp_path_len = strlen (tmp_path);
@@ -5403,14 +5403,31 @@ char **scan_directory (const char *path)
 
   int num_files = 0;
 
-  DIR *d;
+  DIR *d = NULL;
 
   if ((d = opendir (tmp_path)) != NULL)
   {
-    struct dirent *de;
+    #ifdef OSX
+    struct dirent e;
+
+    for (;;) {
+      memset (&e, 0, sizeof (e));
+      struct dirent *de = NULL;
+
+      if (readdir_r (d, &e, &de) != 0)
+      {
+        log_error ("ERROR: readdir_r() failed");
+
+        break;
+      }
+
+      if (de == NULL) break;
+    #else
+    struct dirent *de = NULL;
 
     while ((de = readdir (d)) != NULL)
     {
+      #endif
       if ((strcmp (de->d_name, ".") == 0) || (strcmp (de->d_name, "..") == 0)) continue;
 
       int path_size = strlen (tmp_path) + 1 + strlen (de->d_name);
@@ -5421,7 +5438,7 @@ char **scan_directory (const char *path)
 
       path_file[path_size] = 0;
 
-      DIR *d_test;
+      DIR *d_test = NULL;
 
       if ((d_test = opendir (path_file)) != NULL)
       {
@@ -8610,9 +8627,9 @@ void myquit ()
 
 void load_kernel (const char *kernel_file, int num_devices, size_t *kernel_lengths, const unsigned char **kernel_sources)
 {
-  FILE *fp;
+  FILE *fp = fopen (kernel_file, "rb");
 
-  if ((fp = fopen (kernel_file, "rb")) != NULL)
+  if (fp != NULL)
   {
     struct stat st;
 

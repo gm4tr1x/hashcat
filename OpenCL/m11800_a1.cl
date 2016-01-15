@@ -20,7 +20,6 @@
 #define COMPARE_S "OpenCL/check_single_comp4.c"
 #define COMPARE_M "OpenCL/check_multi_comp4.c"
 
-
 #define INITVAL 0
 
 #define SBOG_LPSti64                         \

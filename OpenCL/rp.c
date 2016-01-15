@@ -3,6 +3,9 @@
  * License.....: MIT
  */
 
+u32 apply_rule (const u32 name, const u32 p0, const u32 p1, u32 buf0[4], u32 buf1[4], const u32 in_len);
+u32 apply_rules (__global u32 *cmds, u32 buf0[4], u32 buf1[4], const u32 len);
+
 static u32 generate_cmask (u32 buf)
 {
   const u32 rmask = ((buf & 0x40404040) >> 1)
@@ -2008,7 +2011,7 @@ static u32 rule_op_mangle_toggle_at (const u32 p0, const u32 p1, u32 buf0[4], u3
 {
   if (p0 >= in_len) return (in_len);
 
-  const u32 tmp = 0x20 << ((p0 & 3) * 8);
+  const u32 tmp = 0x20u << ((p0 & 3) * 8);
 
   switch (p0 / 4)
   {
@@ -2477,7 +2480,7 @@ static u32 rule_op_mangle_overstrike (const u32 p0, const u32 p1, u32 buf0[4], u
 
   const u32 p1n = p1 << ((p0 & 3) * 8);
 
-  const u32 m = ~(0xff << ((p0 & 3) * 8));
+  const u32 m = ~(0xffu << ((p0 & 3) * 8));
 
   switch (p0 / 4)
   {
@@ -3734,7 +3737,7 @@ static u32 rule_op_mangle_chr_shiftl (const u32 p0, const u32 p1, u32 buf0[4], u
 {
   if (p0 >= in_len) return (in_len);
 
-  const u32 mr = 0xff << ((p0 & 3) * 8);
+  const u32 mr = 0xffu << ((p0 & 3) * 8);
   const u32 ml = ~mr;
 
   switch (p0 / 4)
@@ -3756,7 +3759,7 @@ static u32 rule_op_mangle_chr_shiftr (const u32 p0, const u32 p1, u32 buf0[4], u
 {
   if (p0 >= in_len) return (in_len);
 
-  const u32 mr = 0xff << ((p0 & 3) * 8);
+  const u32 mr = 0xffu << ((p0 & 3) * 8);
   const u32 ml = ~mr;
 
   switch (p0 / 4)
@@ -3778,7 +3781,7 @@ static u32 rule_op_mangle_chr_incr (const u32 p0, const u32 p1, u32 buf0[4], u32
 {
   if (p0 >= in_len) return (in_len);
 
-  const u32 mr = 0xff << ((p0 & 3) * 8);
+  const u32 mr = 0xffu << ((p0 & 3) * 8);
   const u32 ml = ~mr;
 
   const u32 n = 0x01010101 & mr;
@@ -3802,7 +3805,7 @@ static u32 rule_op_mangle_chr_decr (const u32 p0, const u32 p1, u32 buf0[4], u32
 {
   if (p0 >= in_len) return (in_len);
 
-  const u32 mr = 0xff << ((p0 & 3) * 8);
+  const u32 mr = 0xffu << ((p0 & 3) * 8);
   const u32 ml = ~mr;
 
   const u32 n = 0x01010101 & mr;
@@ -3831,7 +3834,7 @@ static u32 rule_op_mangle_replace_np1 (const u32 p0, const u32 p1, u32 buf0[4], 
 
   lshift_block (buf0, buf1, tib40, tib41);
 
-  const u32 mr = 0xff << ((p0 & 3) * 8);
+  const u32 mr = 0xffu << ((p0 & 3) * 8);
   const u32 ml = ~mr;
 
   switch (p0 / 4)
@@ -3860,7 +3863,7 @@ static u32 rule_op_mangle_replace_nm1 (const u32 p0, const u32 p1, u32 buf0[4], 
 
   rshift_block (buf0, buf1, tib40, tib41);
 
-  const u32 mr = 0xff << ((p0 & 3) * 8);
+  const u32 mr = 0xffu << ((p0 & 3) * 8);
   const u32 ml = ~mr;
 
   switch (p0 / 4)

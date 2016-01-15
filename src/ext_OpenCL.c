@@ -55,7 +55,6 @@ void hc_clFinish (cl_command_queue command_queue)
     exit (-1);
   }
 
-  #if !defined(OSX)
   cl_int CL_err = clFinish (command_queue);
 
   if (CL_err != CL_SUCCESS)
@@ -64,7 +63,6 @@ void hc_clFinish (cl_command_queue command_queue)
 
     exit (-1);
   }
-  #endif
 }
 
 void hc_clSetKernelArg (cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value)

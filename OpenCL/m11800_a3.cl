@@ -2547,9 +2547,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m04 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
-  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
-  #endif
 
   if (gid >= gid_max) return;
 
@@ -2635,9 +2633,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m08 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
-  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
-  #endif
 
   if (gid >= gid_max) return;
 
@@ -2723,9 +2719,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_m16 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
-  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
-  #endif
 
   if (gid >= gid_max) return;
 
@@ -2811,9 +2805,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s04 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
-  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
-  #endif
 
   if (gid >= gid_max) return;
 
@@ -2899,9 +2891,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s08 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
-  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
-  #endif
 
   if (gid >= gid_max) return;
 
@@ -2987,9 +2977,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m11800_s16 (__glo
   s_sbob_sl64[7][lid4 + 2] = sbob_sl64[7][lid4 + 2];
   s_sbob_sl64[7][lid4 + 3] = sbob_sl64[7][lid4 + 3];
 
-  #ifndef IS_APPLE
   barrier (CLK_LOCAL_MEM_FENCE);
-  #endif
 
   if (gid >= gid_max) return;
 

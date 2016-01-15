@@ -4,18 +4,14 @@
  */
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-function"
-#if !defined(OSX)
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#endif
 
 #include <rp_kernel_on_cpu.h>
 
 static uint32_t generate_cmask (uint32_t buf)
 {
   const uint32_t rmask =  ((buf & 0x40404040) >> 1)
-                    & ~((buf & 0x80808080) >> 2);
+                       & ~((buf & 0x80808080) >> 2);
 
   const uint32_t hmask = (buf & 0x1f1f1f1f) + 0x05050505;
   const uint32_t lmask = (buf & 0x1f1f1f1f) + 0x1f1f1f1f;
@@ -1128,7 +1124,7 @@ static uint rule_op_mangle_toggle_at (const uint p0, const uint p1, uint32_t buf
 {
   if (p0 >= in_len) return (in_len);
 
-  const uint tmp = 0x20 << ((p0 & 3) * 8);
+  const uint tmp = 0x20u << ((p0 & 3) * 8);
 
   switch (p0 / 4)
   {
@@ -1597,7 +1593,7 @@ static uint rule_op_mangle_overstrike (const uint p0, const uint p1, uint32_t bu
 
   const uint p1n = p1 << ((p0 & 3) * 8);
 
-  const uint m = ~(0xff << ((p0 & 3) * 8));
+  const uint m = ~(0xffu << ((p0 & 3) * 8));
 
   switch (p0 / 4)
   {
@@ -2279,7 +2275,7 @@ static uint rule_op_mangle_chr_shiftl (const uint p0, const uint p1, uint32_t bu
 {
   if (p0 >= in_len) return (in_len);
 
-  const uint mr = 0xff << ((p0 & 3) * 8);
+  const uint mr = 0xffu << ((p0 & 3) * 8);
   const uint ml = ~mr;
 
   switch (p0 / 4)
@@ -2301,7 +2297,7 @@ static uint rule_op_mangle_chr_shiftr (const uint p0, const uint p1, uint32_t bu
 {
   if (p0 >= in_len) return (in_len);
 
-  const uint mr = 0xff << ((p0 & 3) * 8);
+  const uint mr = 0xffu << ((p0 & 3) * 8);
   const uint ml = ~mr;
 
   switch (p0 / 4)
@@ -2323,7 +2319,7 @@ static uint rule_op_mangle_chr_incr (const uint p0, const uint p1, uint32_t buf0
 {
   if (p0 >= in_len) return (in_len);
 
-  const uint mr = 0xff << ((p0 & 3) * 8);
+  const uint mr = 0xffu << ((p0 & 3) * 8);
   const uint ml = ~mr;
 
   const uint n = 0x01010101 & mr;
@@ -2347,7 +2343,7 @@ static uint rule_op_mangle_chr_decr (const uint p0, const uint p1, uint32_t buf0
 {
   if (p0 >= in_len) return (in_len);
 
-  const uint mr = 0xff << ((p0 & 3) * 8);
+  const uint mr = 0xffu << ((p0 & 3) * 8);
   const uint ml = ~mr;
 
   const uint n = 0x01010101 & mr;
@@ -2376,7 +2372,7 @@ static uint rule_op_mangle_replace_np1 (const uint p0, const uint p1, uint32_t b
 
   lshift_block (buf0, buf1, tib40, tib41);
 
-  const uint mr = 0xff << ((p0 & 3) * 8);
+  const uint mr = 0xffu << ((p0 & 3) * 8);
   const uint ml = ~mr;
 
   switch (p0 / 4)
@@ -2405,7 +2401,7 @@ static uint rule_op_mangle_replace_nm1 (const uint p0, const uint p1, uint32_t b
 
   rshift_block (buf0, buf1, tib40, tib41);
 
-  const uint mr = 0xff << ((p0 & 3) * 8);
+  const uint mr = 0xffu << ((p0 & 3) * 8);
   const uint ml = ~mr;
 
   switch (p0 / 4)

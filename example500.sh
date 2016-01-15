@@ -1,1 +1,1 @@
-./oclHashcat -m 500 example500.hash example.dict
+./oclHashcat.app -m 500 example500.hash example.dict

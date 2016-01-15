@@ -82,7 +82,7 @@ NOW                      := $(shell date +%s)
 ##
 
 #CFLAGS                   := -O2 -pipe -W -Wall -std=c99 -Iinclude/
-CFLAGS                   := -g -ggdb -pipe -W -Wall -std=c99 -Iinclude/
+CFLAGS                   := -g -ggdb -pipe -W -Wall -std=c99 -Iinclude/ -fsanitize=address
 
 ##
 ## Native compilation target

@@ -129,7 +129,11 @@ const uint  RESTORE_MIN       = 210;
 
 #define MAX_DICTSTAT            10000
 
+#ifdef OSX
+#define NUM_DEFAULT_BENCHMARK_ALGORITHMS 128
+#else
 #define NUM_DEFAULT_BENCHMARK_ALGORITHMS 130
+#endif
 
 #define global_free(attr)       \
 {                               \
@@ -211,12 +215,16 @@ static uint default_benchmark_algorithms[NUM_DEFAULT_BENCHMARK_ALGORITHMS] =
   101,
   111,
   1711,
+  #ifndef OSX
   3000,
+  #endif
   1000,
   1100,
   2100,
   12800,
+  #ifndef OSX
   1500,
+  #endif
   12400,
   500,
   3200,
@@ -621,12 +629,16 @@ const char *USAGE_BIG[] =
   "",
   "[[ Operating-Systems ]]",
   "",
+#ifndef OSX
   "   3000 = LM",
+#endif
   "   1000 = NTLM",
   "   1100 = Domain Cached Credentials (DCC), MS Cache",
   "   2100 = Domain Cached Credentials 2 (DCC2), MS Cache 2",
   "  12800 = MS-AzureSync PBKDF2-HMAC-SHA256",
+#ifndef OSX
   "   1500 = descrypt, DES(Unix), Traditional DES",
+#endif
   "  12400 = BSDiCrypt, Extended DES",
   "    500 = md5crypt $1$, MD5(Unix)",
   "   3200 = bcrypt $2*$, Blowfish(Unix)",
@@ -1646,7 +1658,6 @@ void generate_cached_kernel_filename (const uint attack_exec, const uint attack_
   else
     snprintf (cached_file, 255, "%s/kernels/m%05d.%s.kernel", profile_dir, (int) kern_type, device_name_chksum);
 
-  log_info ("Source from '%s'\n", cached_file);
 }
 
 void generate_source_kernel_mp_filename (const uint opti_type, const uint opts_type, char *shared_dir, char *source_file)
@@ -1659,8 +1670,6 @@ void generate_source_kernel_mp_filename (const uint opti_type, const uint opts_t
   {
     snprintf (source_file, 255, "%s/OpenCL/markov_le.cl", shared_dir);
   }
-
-  log_info ("Source from '%s'\n", source_file);
 }
 
 void generate_cached_kernel_mp_filename (const uint opti_type, const uint opts_type, char *profile_dir, char *device_name_chksum, char *cached_file)
@@ -1673,19 +1682,16 @@ void generate_cached_kernel_mp_filename (const uint opti_type, const uint opts_t
   {
     snprintf (cached_file, 255, "%s/kernels/markov_le.%s.kernel", profile_dir, device_name_chksum);
   }
-  log_info ("Source from '%s'\n", cached_file);
 }
 
 void generate_source_kernel_amp_filename (const uint attack_kern, char *shared_dir, char *source_file)
 {
   snprintf (source_file, 255, "%s/OpenCL/amp_a%d.cl", shared_dir, attack_kern);
-  log_info ("Source from '%s'\n", source_file);
 }
 
 void generate_cached_kernel_amp_filename (const uint attack_kern, char *profile_dir, char *device_name_chksum, char *cached_file)
 {
   snprintf (cached_file, 255, "%s/kernels/amp_a%d.%s.kernel", profile_dir, attack_kern, device_name_chksum);
-  log_info ("Source from '%s'\n", cached_file);
 }
 
 uint convert_from_hex (char *line_buf, const uint line_len)
@@ -1743,7 +1749,7 @@ uint count_lines (FILE *fd)
 
   while (!feof (fd))
   {
-    size_t nread = fread (buf, sizeof (char), BUFSIZ, fd);
+    size_t nread = fread (buf, sizeof (char), BUFSIZ - 1, fd);
     nread_tmp    = nread;
 
     if (nread < 1) continue;
@@ -1815,7 +1821,9 @@ void check_hash (hc_device_param_t *device_param, const uint salt_pos, const uin
 
   // hash
 
-  char out_buf[4096]; memset (out_buf, 0, sizeof (out_buf));
+  char out_buf[4096];
+
+  memset (out_buf, 0, sizeof (out_buf));
 
   ascii_digest (out_buf, salt_pos, digest_pos);
 
@@ -2102,9 +2110,9 @@ void check_hash (hc_device_param_t *device_param, const uint salt_pos, const uin
   {
     char *loopback_file = data.loopback_file;
 
-    FILE *fb_fp = NULL;
+    FILE *fb_fp = fopen (loopback_file, "ab");
 
-    if ((fb_fp = fopen (loopback_file, "ab")) != NULL)
+    if (fb_fp != NULL)
     {
       format_plain (fb_fp, plain_ptr, plain_len, 1);
 
@@ -2141,9 +2149,21 @@ void check_cracked (hc_device_param_t *device_param, const uint salt_pos)
   salt_t *salt_buf = &data.salts_buf[salt_pos];
 
   int found = 0;
+
   hc_clEnqueueReadBuffer (device_param->command_queue, device_param->d_result, CL_TRUE, 0, device_param->size_results, device_param->result, 0, NULL, NULL);
 
-  for (uint i = 0; i < KERNEL_THREADS; i++) if (device_param->result[i] == 1) found = 1;
+  if (device_param->size_results != 256)
+    log_info("ret size: %u\n", device_param->size_results);
+
+  for (uint i = 0; i < KERNEL_THREADS; i++)
+  {
+    if (device_param->result[i] == 1)
+    {
+      //log_info("found at %d/%d\n", i, KERNEL_THREADS);
+      found = 1;
+      break;
+    }
+  }
 
   if (found == 1)
   {
@@ -2606,6 +2626,7 @@ void run_copy (hc_device_param_t *device_param, const uint pws_cnt)
 void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint pws_cnt)
 {
   const uint kernel_loops = data.kernel_loops;
+  //const uint benchmark = data.benchmark;
 
   // init speed timer
 
@@ -2934,11 +2955,14 @@ void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint
        * result
        */
 
-      hc_thread_mutex_lock (mux_display);
+//      if (benchmark == 0)
+//      {
+        hc_thread_mutex_lock (mux_display);
 
-      check_cracked (device_param, salt_pos);
+        check_cracked (device_param, salt_pos);
 
-      hc_thread_mutex_unlock (mux_display);
+        hc_thread_mutex_unlock (mux_display);
+//      }
 
       /**
        * progress
@@ -4553,6 +4577,10 @@ void weak_hash_check (hc_device_param_t *device_param, const uint salt_pos, cons
 
   data.dictfile = (char *) weak_hash_check;
 
+  uint cmd0_rule_old = data.kernel_rules_buf[0].cmds[0];
+
+  data.kernel_rules_buf[0].cmds[0] = 0;
+
   /**
    * run the kernel
    */
@@ -4602,6 +4630,8 @@ void weak_hash_check (hc_device_param_t *device_param, const uint salt_pos, cons
   device_param->kernel_params_buf32[31] = 0;
 
   data.dictfile = dictfile_old;
+
+  data.kernel_rules_buf[0].cmds[0] = cmd0_rule_old;
 }
 
 // hlfmt hashcat
@@ -4966,10 +4996,10 @@ uint generate_bitmaps (const uint digests_cnt, const uint dgst_size, const uint 
 
     digests_buf_ptr += dgst_size;
 
-    const uint val0 = 1 << (digest_ptr[dgst_pos0] & 0x1f);
-    const uint val1 = 1 << (digest_ptr[dgst_pos1] & 0x1f);
-    const uint val2 = 1 << (digest_ptr[dgst_pos2] & 0x1f);
-    const uint val3 = 1 << (digest_ptr[dgst_pos3] & 0x1f);
+    const uint val0 = 1u << (digest_ptr[dgst_pos0] & 0x1f);
+    const uint val1 = 1u << (digest_ptr[dgst_pos1] & 0x1f);
+    const uint val2 = 1u << (digest_ptr[dgst_pos2] & 0x1f);
+    const uint val3 = 1u << (digest_ptr[dgst_pos3] & 0x1f);
 
     const uint idx0 = (digest_ptr[dgst_pos0] >> dgst_shifts) & bitmap_mask;
     const uint idx1 = (digest_ptr[dgst_pos1] >> dgst_shifts) & bitmap_mask;
@@ -6540,6 +6570,14 @@ int main (int argc, char **argv)
       data.quiet = quiet;
     }
 
+    #ifdef OSX
+    if (hash_mode == 3000 || hash_mode == 1500)
+    {
+      log_error ("Hash mode %d is disabled for Apple platform", hash_mode);
+      return (-1);
+    }
+    #endif
+
     switch (hash_mode)
     {
       case     0:  hash_type   = HASH_TYPE_MD5;
@@ -7590,12 +7628,8 @@ int main (int argc, char **argv)
       case  1500:  hash_type   = HASH_TYPE_DESCRYPT;
                    salt_type   = SALT_TYPE_EMBEDDED;
                    attack_exec = ATTACK_EXEC_INSIDE_KERNEL;
-#ifdef OSX
-                   opts_type   = OPTS_TYPE_PT_GENERATE_LE;
-#else
                    opts_type   = OPTS_TYPE_PT_GENERATE_LE
                                | OPTS_TYPE_PT_BITSLICE;
-#endif
                    kern_type   = KERN_TYPE_DESCRYPT;
                    dgst_size   = DGST_SIZE_4_4; // originally DGST_SIZE_4_2
                    parse_func  = descrypt_parse_hash;
@@ -8039,14 +8073,9 @@ int main (int argc, char **argv)
       case  3000:  hash_type   = HASH_TYPE_LM;
                    salt_type   = SALT_TYPE_NONE;
                    attack_exec = ATTACK_EXEC_INSIDE_KERNEL;
-#ifdef OSX
-                   opts_type   = OPTS_TYPE_PT_GENERATE_LE
-                               | OPTS_TYPE_PT_UPPER;
-#else
                    opts_type   = OPTS_TYPE_PT_GENERATE_LE
                                | OPTS_TYPE_PT_UPPER
                                | OPTS_TYPE_PT_BITSLICE;
-#endif
                    kern_type   = KERN_TYPE_LM;
                    dgst_size   = DGST_SIZE_4_4; // originally DGST_SIZE_4_2
                    parse_func  = lm_parse_hash;
@@ -8831,10 +8860,10 @@ int main (int argc, char **argv)
                    sort_by_digest = sort_by_digest_4_4;
                    opti_type   = OPTI_TYPE_ZERO_BYTE
                                | OPTI_TYPE_NOT_ITERATED;
-                   dgst_pos0   = 3;
-                   dgst_pos1   = 7;
+                   dgst_pos0   = 0;
+                   dgst_pos1   = 1;
                    dgst_pos2   = 2;
-                   dgst_pos3   = 6;
+                   dgst_pos3   = 3;
                    break;
 
       case  7600:  hash_type   = HASH_TYPE_SHA1;
@@ -10464,9 +10493,9 @@ int main (int argc, char **argv)
 
         logfile_top_var_string ("target", hashfile);
 
-        FILE *fp = NULL;
+        FILE *fp = fopen (hashfile, "rb");
 
-        if ((fp = fopen (hashfile, "rb")) == NULL)
+        if (fp == NULL)
         {
           log_error ("ERROR: %s: %s", hashfile, strerror (errno));
 
@@ -10814,9 +10843,9 @@ int main (int argc, char **argv)
       {
         char *hashfile = data.hashfile;
 
-        FILE *fp;
+        FILE *fp = fopen (hashfile, "rb");
 
-        if ((fp = fopen (hashfile, "rb")) == NULL)
+        if (fp == NULL)
         {
           log_error ("ERROR: %s: %s", hashfile, strerror (errno));
 
@@ -11247,14 +11276,17 @@ int main (int argc, char **argv)
 
       if (benchmark_mode == 1)
       {
-        #ifndef OSX
-        kernel_loops *= 8;
-        #endif
-
         #ifdef OSX
-        if (hash_mode != 10700) kernel_accel *= 4;
-        if (hash_mode == 1500) kernel_loops = 16;
+        kernel_loops *= 4;
+/*        if (hash_mode != 10700 && hash_mode != 12200 && hash_mode != 9400 && hash_mode != 9600 && hash_mode != 8200) kernel_accel *= 2;
+        if (hash_mode == 10500) kernel_accel = 64;
+        if (hash_mode == 12400) kernel_accel = 1;*/
+
+
+	if (hash_mode == 11700 || hash_mode == 11800 || hash_mode == 7100 || hash_mode == 11600) kernel_accel = 1;
+	if (hash_mode == 6241) kernel_accel = 16;
         #else
+        kernel_loops *= 8;
 	kernel_accel *= 4;
         #endif
 
@@ -11393,12 +11425,8 @@ int main (int argc, char **argv)
           case 10300:  kernel_loops = ROUNDS_SAPH_SHA1;
                        kernel_accel = 16;
                        break;
-          #ifdef OSX
-          case 10500:  kernel_accel = 64;
-          #else
           case 10500:  kernel_loops = ROUNDS_PDF14;
                        kernel_accel = 256;
-          #endif
                        break;
           case 10700:  kernel_loops = ROUNDS_PDF17L8;
                        kernel_accel = 8;
@@ -11455,6 +11483,14 @@ int main (int argc, char **argv)
 
         if (kernel_loops > 1024) kernel_loops = 1024;
         if (kernel_accel >  256) kernel_accel =  256; // causes memory problems otherwise
+      }
+
+      // some algorithm collide too slow, take more time
+
+      if (benchmark == 1 && (hash_mode == 11600 || hash_mode == 13000 || hash_mode == 11300))
+      {
+          runtime += 10;
+          data.runtime = runtime;
       }
 
       if ((opts_type & OPTS_TYPE_PT_BITSLICE) && (attack_mode == ATTACK_MODE_BF))
@@ -12114,7 +12150,7 @@ int main (int argc, char **argv)
      * Some algorithm, like descrypt, can benefit from JIT compilation
      */
 
-    #if defined(OSX)
+    #if defined(OSX) // TODO: remove when kernels are stable
     uint force_jit_compilation = 1500;
     #else
     uint force_jit_compilation = 0;
@@ -12228,11 +12264,11 @@ int main (int argc, char **argv)
       char in[BLOCK_SIZE];
       char out[BLOCK_SIZE];
 
-      FILE *fp = NULL;
-
       uint rule_line = 0;
 
-      if ((fp = fopen (rp_file, "rb")) == NULL)
+      FILE *fp = fopen (rp_file, "rb");
+
+      if (fp == NULL)
       {
         log_error ("ERROR: %s: %s", rp_file, strerror (errno));
 
@@ -12634,7 +12670,7 @@ int main (int argc, char **argv)
 
         for (uint i = 0; i < 32; i++)
         {
-          const uint opti_bit = 1 << i;
+          const uint opti_bit = 1u << i;
 
           if (opti_type & opti_bit) log_info ("* %s", stroptitype (opti_bit));
         }
@@ -12710,8 +12746,6 @@ int main (int argc, char **argv)
       cl_uint vendor_id = 0;
 
       hc_clGetDeviceInfo (device, CL_DEVICE_VENDOR_ID, sizeof (vendor_id), &vendor_id, NULL);
-
-log_info("vendor_id : %u\n", vendor_id);
 
       device_param->vendor_id = vendor_id;
 
@@ -13327,7 +13361,6 @@ log_info("vendor_id : %u\n", vendor_id);
 
             continue;
           }
-log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\n", device_processors, device_processor_cores, shader_per_mp);
 
           for (uint salts_pos = 0; salts_pos < data.salts_cnt; salts_pos++)
           {
@@ -14302,6 +14335,7 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
 
       char *hash_type = strhashtype (data.hash_mode); // not a bug
 
+      log_info ("Runtime : %u", data.runtime);
       log_info ("Hashmode: %u", data.hash_mode);
       log_info ("Hashtype: %s", hash_type);
       log_info ("Workload: %u loops, %u accel", kernel_loops, kernel_accel);
@@ -14469,12 +14503,11 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
 
       // find the bigger dictionary and use as base
 
-      FILE *fp1;
-      FILE *fp2;
-
       struct stat tmp_stat;
 
-      if ((fp1 = fopen (dictfile1, "rb")) == NULL)
+      FILE *fp1 = fopen (dictfile1, "rb");
+
+      if (fp1 == NULL)
       {
         log_error ("ERROR: %s: %s", dictfile1, strerror (errno));
 
@@ -14499,7 +14532,9 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
         return (-1);
       }
 
-      if ((fp2 = fopen (dictfile2, "rb")) == NULL)
+      FILE *fp2 = fopen (dictfile2, "rb");
+
+      if (fp2 == NULL)
       {
         log_error ("ERROR: %s: %s", dictfile2, strerror (errno));
 
@@ -14647,9 +14682,9 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
 
               if (is_file == 1)
               {
-                FILE *mask_fp;
+                FILE *mask_fp = fopen (mask, "r");
 
-                if ((mask_fp = fopen (mask, "r")) == NULL)
+                if (mask_fp == NULL)
                 {
                   log_error ("ERROR: %s: %s", mask, strerror (errno));
 
@@ -14786,9 +14821,9 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
 
         if (is_file == 1)
         {
-          FILE *mask_fp;
+          FILE *mask_fp = fopen (mask, "r");
 
-          if ((mask_fp = fopen (mask, "r")) == NULL)
+          if (mask_fp == NULL)
           {
             log_error ("ERROR: %s: %s", mask, strerror (errno));
 
@@ -14963,9 +14998,9 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
 
         if (is_file == 1)
         {
-          FILE *mask_fp;
+          FILE *mask_fp = fopen (mask, "r");
 
-          if ((mask_fp = fopen (mask, "r")) == NULL)
+          if (mask_fp == NULL)
           {
             log_error ("ERROR: %s: %s", mask, strerror (errno));
 
@@ -15161,7 +15196,7 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
       * Outfile remove
       */
 
-    if (keyspace == 0)
+    if (keyspace == 0 && benchmark == 0)
     {
       if (outfile_check_timer != 0)
       {
@@ -15436,6 +15471,13 @@ log_info("device_processors (%d) device_processor_cores (%d) shader_per_mp (%d)\
       {
         if (keyspace == 0)
         {
+          if (!induction_directory)
+          {
+            log_error ("ERROR: induction_directory is null");
+
+            return (-1);
+          }
+
           induction_dictionaries = scan_directory (induction_directory);
 
           induction_dictionaries_cnt = count_dictionaries (induction_dictionaries);
