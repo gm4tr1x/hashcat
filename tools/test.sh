@@ -295,7 +295,7 @@ function status()
 
         ;;
       *)
-        echo "! unhandled return code ${RET}, cmdline : ${CMD}" $>> ${OUTD}/logfull.txt
+        echo "! unhandled return code ${RET}, cmdline : ${CMD}" >> ${OUTD}/logfull.txt
         echo "! unhandled return code, see ${OUTD}/logfull.txt for details."
         ((e_nf++))
         ;;

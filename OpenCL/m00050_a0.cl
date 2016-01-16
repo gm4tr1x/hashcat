@@ -237,7 +237,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00050_m04 (__glo
   pw_buf1[2] = pws[gid].i[ 6];
   pw_buf1[3] = pws[gid].i[ 7];
 
-  const u32 pw_len = pws[gid].pw_len;
+  //const u32 pw_len = pws[gid].pw_len;
 
   /**
    * salt
@@ -307,7 +307,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00050_m04 (__glo
     w3[2] = 0;
     w3[3] = 0;
 
-    const u32 out_len = apply_rules (rules_buf[il_pos].cmds, w0, w1, pw_len);
+    //const u32 out_len = apply_rules (rules_buf[il_pos].cmds, w0, w1, pw_len);
 
     /**
      * pads
@@ -414,7 +414,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00050_s04 (__glo
   pw_buf1[2] = pws[gid].i[ 6];
   pw_buf1[3] = pws[gid].i[ 7];
 
-  const u32 pw_len = pws[gid].pw_len;
+  //const u32 pw_len = pws[gid].pw_len;
 
   /**
    * salt
@@ -496,7 +496,7 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00050_s04 (__glo
     w3[2] = 0;
     w3[3] = 0;
 
-    const u32 out_len = apply_rules (rules_buf[il_pos].cmds, w0, w1, pw_len);
+    //const u32 out_len = apply_rules (rules_buf[il_pos].cmds, w0, w1, pw_len);
 
     /**
      * pads

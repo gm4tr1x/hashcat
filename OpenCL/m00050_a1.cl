@@ -296,9 +296,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00050_m04 (__glo
 
   for (u32 il_pos = 0; il_pos < combs_cnt; il_pos++)
   {
-    const u32 pw_r_len = combs_buf[il_pos].pw_len;
+    //const u32 pw_r_len = combs_buf[il_pos].pw_len;
 
-    const u32 pw_len = pw_l_len + pw_r_len;
+    //const u32 pw_len = pw_l_len + pw_r_len;
 
     u32 wordr0[4];
 
@@ -539,9 +539,9 @@ __kernel void __attribute__((reqd_work_group_size (64, 1, 1))) m00050_s04 (__glo
 
   for (u32 il_pos = 0; il_pos < combs_cnt; il_pos++)
   {
-    const u32 pw_r_len = combs_buf[il_pos].pw_len;
+    //const u32 pw_r_len = combs_buf[il_pos].pw_len;
 
-    const u32 pw_len = pw_l_len + pw_r_len;
+    //const u32 pw_len = pw_l_len + pw_r_len;
 
     u32 wordr0[4];
 
