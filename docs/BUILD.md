@@ -56,7 +56,7 @@ $ make native
 
 - build native osx binaries
 ```sh
-$ make native-osx
+$ make osx
 ```
 
 - build all binaries (see Note1 and Note2):

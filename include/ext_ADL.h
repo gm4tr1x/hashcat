@@ -7,6 +7,7 @@
 #define EXT_ADL_H
 
 #include <common.h>
+
 #include <adl_sdk.h>
 
 typedef int HM_ADAPTER_AMD;

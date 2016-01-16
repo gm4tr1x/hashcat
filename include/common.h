@@ -47,7 +47,7 @@
 #include <mach-o/dyld.h>
 #endif
 
-typedef void     *HM_LIB;
+typedef void *HM_LIB;
 #endif
 
 #ifdef _WIN
@@ -78,6 +78,13 @@ typedef HINSTANCE HM_LIB;
 
 #endif
 
+typedef uint8_t  u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
+typedef uint32_t uint; // we need to get rid of this sooner or later, for consistency
+
 #define SPEED_CACHE  128
 #define SPEED_MAXAGE 4096
 
@@ -96,7 +103,7 @@ void log_out (FILE *fp, const char *fmt, ...);
 void log_info (const char *fmt, ...);
 void log_error (const char *fmt, ...);
 
-typedef uint32_t uint; // we should rename to u32, sooner or later, for consistency
-typedef uint64_t u64;
+#define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
 
 #endif
