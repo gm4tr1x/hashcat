@@ -3,6 +3,10 @@
  * License.....: MIT
  */
 
+#ifdef OSX
+#include <stdio.h>
+#endif
+
 #include <common.h>
 #include <shared.h>
 #include <rp_kernel_on_cpu.h>
@@ -3389,7 +3393,7 @@ uint pw_add_to_hc1 (hc_device_param_t *device_param, const uint8_t *pw_buf, cons
 
   uint cache_cnt = pw_cache->cnt;
 
-  u8 *pw_hc1 = pw_cache->pw_buf.hc1[cache_cnt];
+  u8 *pw_hc1 = pw_cache->pw_buf.h.hc1[cache_cnt];
 
   memcpy (pw_hc1, pw_buf, pw_len);
 
@@ -12860,11 +12864,13 @@ int main (int argc, char **argv)
      * OpenCL devices: allocate buffer for device specific information
      */
 
+    #ifndef OSX
     int *temp_retain_fanspeed_value = (int *) mycalloc (devices_cnt, sizeof (int));
 
     ADLOD6MemClockState *od_clock_mem_status = (ADLOD6MemClockState *) mycalloc (devices_cnt, sizeof (ADLOD6MemClockState));
 
     int *od_power_control_status = (int *) mycalloc (devices_cnt, sizeof (int));
+    #endif
 
     /**
      * enable custom signal handler(s)
