@@ -428,6 +428,7 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_LOOPS_OSX_1720    4
 #define KERNEL_LOOPS_OSX_1722    4
 #define KERNEL_LOOPS_OSX_1730    4
+#define KERNEL_LOOPS_OSX_1731    4
 #define KERNEL_LOOPS_OSX_1740    4
 #define KERNEL_LOOPS_OSX_1750    4
 #define KERNEL_LOOPS_OSX_1760    4
@@ -547,6 +548,7 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_LOOPS_STD_1720    32
 #define KERNEL_LOOPS_STD_1722    32
 #define KERNEL_LOOPS_STD_1730    32
+#define KERNEL_LOOPS_STD_1731    32
 #define KERNEL_LOOPS_STD_1740    32
 #define KERNEL_LOOPS_STD_1750    16
 #define KERNEL_LOOPS_STD_1760    16
@@ -622,7 +624,6 @@ extern hc_thread_mutex_t mux_display;
 #define KERNEL_LOOPS_910     256
 #define KERNEL_LOOPS_1500    256
 #define KERNEL_LOOPS_1600    256
-#define KERNEL_LOOPS_1731    32
 #define KERNEL_LOOPS_1800    16
 #define KERNEL_LOOPS_2100    256
 #define KERNEL_LOOPS_2500    256

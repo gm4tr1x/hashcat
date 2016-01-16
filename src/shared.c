@@ -9258,7 +9258,7 @@ uint set_kernel_loops (uint hash_mode)
     case  1720: return GET_LOOPS_TUNED (1720);
     case  1722: return GET_LOOPS_TUNED (1722);
     case  1730: return GET_LOOPS_TUNED (1730);
-    case  1731: return GET_LOOPS (1731);
+    case  1731: return GET_LOOPS_TUNED (1731);
     case  1740: return GET_LOOPS_TUNED (1740);
     case  1750: return GET_LOOPS_TUNED (1750);
     case  1760: return GET_LOOPS_TUNED (1760);
