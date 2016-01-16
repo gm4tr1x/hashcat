@@ -489,7 +489,7 @@ const char *USAGE_BIG[] =
   "   ?l = abcdefghijklmnopqrstuvwxyz",
   "   ?u = ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   "   ?d = 0123456789",
-  "   ?s =  !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
+  "   ?s =  !\"#$%%&'()*+,-./:;<=>?@[\\]^_`{|}~",
   "   ?a = ?l?u?d?s",
   "   ?b = 0x00 - 0xff",
   "",
@@ -1366,9 +1366,7 @@ void status_display ()
 
     if (device_param->skipped) continue;
 
-    char display_dev_cur[16];
-
-    memset (display_dev_cur, 0, sizeof (display_dev_cur));
+    char display_dev_cur[16] = { 0 };
 
     strncpy (display_dev_cur, "0.00", 4);
 
@@ -1377,9 +1375,7 @@ void status_display ()
     log_info ("Speed.Dev.#%d...: %9sH/s", device_id + 1, display_dev_cur);
   }
 
-  char display_all_cur[16];
-
-  memset (display_all_cur, 0, sizeof (display_all_cur));
+  char display_all_cur[16] = { 0 };
 
   strncpy (display_all_cur, "0.00", 4);
 
@@ -1634,9 +1630,7 @@ void status_benchmark ()
 
     if (device_param->skipped) continue;
 
-    char display_dev_cur[16];
-
-    memset (display_dev_cur, 0, sizeof (display_dev_cur));
+    char display_dev_cur[16] = { 0 };
 
     strncpy (display_dev_cur, "0.00", 4);
 
@@ -1645,9 +1639,7 @@ void status_benchmark ()
     log_info ("Speed.Dev.#%d.: %9sH/s", device_id + 1, display_dev_cur);
   }
 
-  char display_all_cur[16];
-
-  memset (display_all_cur, 0, sizeof (display_all_cur));
+  char display_all_cur[16] = { 0 };
 
   strncpy (display_all_cur, "0.00", 4);
 
@@ -1854,9 +1846,7 @@ void check_hash (hc_device_param_t *device_param, const uint salt_pos, const uin
 
   // hash
 
-  char out_buf[4096];
-
-  memset (out_buf, 0, sizeof (out_buf));
+  char out_buf[4096] = { 0 };
 
   ascii_digest (out_buf, salt_pos, digest_pos);
 
@@ -2272,11 +2262,8 @@ void save_hash ()
 {
   char *hashfile = data.hashfile;
 
-  char new_hashfile[256];
-  char old_hashfile[256];
-
-  memset (new_hashfile, 0, sizeof (new_hashfile));
-  memset (old_hashfile, 0, sizeof (old_hashfile));
+  char new_hashfile[256] = { 0 };
+  char old_hashfile[256] = { 0 };
 
   snprintf (new_hashfile, 255, "%s.new", hashfile);
   snprintf (old_hashfile, 255, "%s.old", hashfile);
@@ -2308,9 +2295,7 @@ void save_hash ()
 
       if (data.hash_mode != 2500)
       {
-        char out_buf[4096];
-
-        memset (out_buf, 0, sizeof (out_buf));
+        char out_buf[4096] = { 0 };
 
         if (data.username == 1)
         {
@@ -2648,7 +2633,7 @@ void run_copy (hc_device_param_t *device_param, const uint pws_cnt)
   }
   else if (data.attack_kern == ATTACK_KERN_BF)
   {
-    const uint64_t off = device_param->words_off;
+    const u64 off = device_param->words_off;
 
     device_param->kernel_params_mp_l_buf64[3] = off;
 
@@ -2791,9 +2776,7 @@ void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint
 
           if (run_rule_engine (data.rule_len_r, data.rule_buf_r))
           {
-            char rule_buf_out[BLOCK_SIZE];
-
-            memset (rule_buf_out, 0, sizeof (rule_buf_out));
+            char rule_buf_out[BLOCK_SIZE] = { 0 };
 
             int rule_len_out = _old_apply_rule (data.rule_buf_r, data.rule_len_r, line_buf, line_len, rule_buf_out);
 
@@ -2990,7 +2973,7 @@ void run_cracker (hc_device_param_t *device_param, const uint pw_cnt, const uint
 
       #ifdef OSX
       if (data.benchmark == 1 &&
-         (data.hash_mode == 5500 || data.hash_mode == 8500 ||
+         (data.hash_mode == 5500 || data.hash_mode == 8500 || data.hash_mode == 11800 ||
           data.hash_mode == 8600 || data.hash_mode == 3100 || data.hash_mode == 8700 ||
           data.hash_mode == 12400))
       {
@@ -3186,9 +3169,7 @@ void get_next_word (wl_data_t *wl_data, FILE *fd, char **out_buf, uint *out_len)
 
     if (run_rule_engine (data.rule_len_l, data.rule_buf_l))
     {
-      char rule_buf_out[BLOCK_SIZE];
-
-      memset (rule_buf_out, 0, sizeof (rule_buf_out));
+      char rule_buf_out[BLOCK_SIZE] = { 0 };
 
       int rule_len_out = -1;
 
@@ -3319,9 +3300,7 @@ uint64_t count_words (wl_data_t *wl_data, FILE *fd, char *dictfile, dictstat_t *
 
       if (run_rule_engine (data.rule_len_l, data.rule_buf_l))
       {
-        char rule_buf_out[BLOCK_SIZE];
-
-        memset (rule_buf_out, 0, sizeof (rule_buf_out));
+        char rule_buf_out[BLOCK_SIZE] = { 0 };
 
         int rule_len_out = -1;
 
@@ -3684,9 +3663,7 @@ void *thread_outfile_remove (void *p)
   int (*parse_func) (char *, uint, hash_t *)         = data.parse_func;
 
   // buffers
-  hash_t hash_buf;
-
-  memset (&hash_buf, 0, sizeof (hash_buf));
+  hash_t hash_buf = { 0, 0, 0, 0, 0 };
 
   hash_buf.digest = mymalloc (dgst_size);
 
@@ -4063,9 +4040,7 @@ void *thread_calc_stdin (void *p)
 
       if (run_rule_engine (data.rule_len_l, data.rule_buf_l))
       {
-        char rule_buf_out[BLOCK_SIZE];
-
-        memset (rule_buf_out, 0, sizeof (rule_buf_out));
+        char rule_buf_out[BLOCK_SIZE] = { 0 };
 
         int rule_len_out = -1;
 
@@ -4390,9 +4365,7 @@ void *thread_calc (void *p)
 
           if (run_rule_engine (data.rule_len_l, data.rule_buf_l))
           {
-            char rule_buf_out[BLOCK_SIZE];
-
-            memset (rule_buf_out, 0, sizeof (rule_buf_out));
+            char rule_buf_out[BLOCK_SIZE] = { 0 };
 
             int rule_len_out = -1;
 
@@ -10163,9 +10136,7 @@ int main (int argc, char **argv)
      * potfile
      */
 
-    char potfile[256];
-
-    memset (potfile, 0, sizeof (potfile));
+    char potfile[256] = { 0 };
 
     snprintf (potfile, sizeof (potfile) - 1, "%s/%s.pot", session_dir, session);
 
@@ -10475,11 +10446,8 @@ int main (int argc, char **argv)
      * charsets : keep them together for more easy maintainnce
      */
 
-    cs_t mp_sys[6];
-    cs_t mp_usr[4];
-
-    memset (mp_sys, 0, sizeof (mp_sys));
-    memset (mp_usr, 0, sizeof (mp_usr));
+    cs_t mp_sys[6] = { { { 0 }, 0 } };
+    cs_t mp_usr[4] = { { { 0 }, 0 } };
 
     mp_setup_sys (mp_sys);
 
@@ -12204,9 +12172,9 @@ int main (int argc, char **argv)
      */
 
     #if defined(OSX) // TODO: remove when kernels are stable
-    uint force_jit_compilation = 1500;
+    int force_jit_compilation = 1500;
     #else
-    uint force_jit_compilation = 0;
+    int force_jit_compilation = 1;
     #endif
 
     if (hash_mode == 8900)
@@ -12514,9 +12482,7 @@ int main (int argc, char **argv)
     {
       cl_platform_id platform = platforms[platform_id];
 
-      char platform_vendor[INFOSZ];
-
-      memset (platform_vendor, 0, sizeof (platform_vendor));
+      char platform_vendor[INFOSZ] = { 0 };
 
       hc_clGetPlatformInfo (platform, CL_PLATFORM_VENDOR, sizeof (platform_vendor), platform_vendor, NULL);
 
@@ -12966,11 +12932,8 @@ int main (int argc, char **argv)
      * HM devices: init
      */
 
-    hm_attrs_t hm_adapters_nv[DEVICES_MAX];
-    hm_attrs_t hm_adapters_amd[DEVICES_MAX];
-
-    memset (hm_adapters_nv,  0, sizeof (hm_adapters_nv));
-    memset (hm_adapters_amd, 0, sizeof (hm_adapters_amd));
+    hm_attrs_t hm_adapters_nv[DEVICES_MAX]  = { { { 0 }, 0, 0 } };
+    hm_attrs_t hm_adapters_amd[DEVICES_MAX] = { { { 0 }, 0, 0 } };
 
     if (gpu_temp_disable == 0)
     {
@@ -13446,9 +13409,7 @@ int main (int argc, char **argv)
          * kernel source filename
          */
 
-        char source_file[256];
-
-        memset (source_file, 0, sizeof (source_file));
+        char source_file[256] = { 0 };
 
         generate_source_kernel_filename (attack_exec, attack_kern, kern_type, shared_dir, source_file);
 
@@ -13465,9 +13426,7 @@ int main (int argc, char **argv)
          * kernel cached filename
          */
 
-        char cached_file[256];
-
-        memset (cached_file, 0, sizeof (cached_file));
+        char cached_file[256] = { 0 };
 
         generate_cached_kernel_filename (attack_exec, attack_kern, kern_type, profile_dir, device_name_chksum, cached_file);
 
@@ -13488,7 +13447,7 @@ int main (int argc, char **argv)
 
         const u8 **kernel_sources = (const u8 **) mymalloc (sizeof (u8 *));
 
-        if (force_jit_compilation == 0)
+        if (force_jit_compilation == -1)
         {
           if (cached == 0)
           {
@@ -13577,9 +13536,7 @@ int main (int argc, char **argv)
          * kernel mp source filename
          */
 
-        char source_file[256];
-
-        memset (source_file, 0, sizeof (source_file));
+        char source_file[256] = { 0 };
 
         generate_source_kernel_mp_filename (opti_type, opts_type, shared_dir, source_file);
 
@@ -13596,9 +13553,7 @@ int main (int argc, char **argv)
          * kernel mp cached filename
          */
 
-        char cached_file[256];
-
-        memset (cached_file, 0, sizeof (cached_file));
+        char cached_file[256] = { 0 };
 
         generate_cached_kernel_mp_filename (opti_type, opts_type, profile_dir, device_name_chksum, cached_file);
 
@@ -13690,9 +13645,7 @@ int main (int argc, char **argv)
          * kernel amp source filename
          */
 
-        char source_file[256];
-
-        memset (source_file, 0, sizeof (source_file));
+        char source_file[256] = { 0 };
 
         generate_source_kernel_amp_filename (attack_kern, shared_dir, source_file);
 
@@ -13709,9 +13662,7 @@ int main (int argc, char **argv)
          * kernel amp cached filename
          */
 
-        char cached_file[256];
-
-        memset (cached_file, 0, sizeof (cached_file));
+        char cached_file[256] = { 0 };
 
         generate_cached_kernel_amp_filename (attack_kern, profile_dir, device_name_chksum, cached_file);
 
@@ -14039,9 +13990,7 @@ int main (int argc, char **argv)
        * kernel name
        */
 
-      char kernel_name[64];
-
-      memset (kernel_name, 0, sizeof (kernel_name));
+      char kernel_name[64] = { 0 };
 
       if (attack_exec == ATTACK_EXEC_INSIDE_KERNEL)
       {
@@ -15201,11 +15150,24 @@ int main (int argc, char **argv)
 
     if (weak_hash_threshold >= salts_cnt)
     {
+      uint first_device_id = 0;
+
+      for (uint device_id = 0; device_id < devices_cnt; device_id++)
+      {
+        hc_device_param_t *device_param = &data.devices_param[device_id];
+
+        if (device_param->skipped) continue;
+
+        first_device_id = device_id;
+
+        break;
+      }
+
       if (data.quiet == 0) log_info_nn ("Checking for weak hashes...");
 
       for (uint salt_pos = 0; salt_pos < salts_cnt; salt_pos++)
       {
-        weak_hash_check (&data.devices_param[0], salt_pos, kernel_loops);
+        weak_hash_check (&data.devices_param[first_device_id], salt_pos, kernel_loops);
       }
     }
 
@@ -15405,9 +15367,7 @@ int main (int argc, char **argv)
           data.css_cnt = css_cnt;
           data.css_buf = css_buf;
 
-          uint uniq_tbls[SP_PW_MAX][CHARSIZ];
-
-          memset (uniq_tbls, 0, sizeof (uniq_tbls));
+          uint uniq_tbls[SP_PW_MAX][CHARSIZ] = { { 0 } };
 
           mp_css_to_uniq_tbl (css_cnt, css_buf, uniq_tbls);
 
@@ -15517,13 +15477,6 @@ int main (int argc, char **argv)
       {
         if (keyspace == 0)
         {
-          if (!induction_directory)
-          {
-            log_error ("ERROR: induction_directory is null");
-
-            return (-1);
-          }
-
           induction_dictionaries = scan_directory (induction_directory);
 
           induction_dictionaries_cnt = count_dictionaries (induction_dictionaries);
@@ -15862,9 +15815,7 @@ int main (int argc, char **argv)
 
           if (maskpos > 0 && dictpos == 0) free (masks[maskpos - 1]);
 
-          uint uniq_tbls[SP_PW_MAX][CHARSIZ];
-
-          memset (uniq_tbls, 0, sizeof (uniq_tbls));
+          uint uniq_tbls[SP_PW_MAX][CHARSIZ] = { { 0 } };
 
           mp_css_to_uniq_tbl (css_cnt, css_buf, uniq_tbls);
 
