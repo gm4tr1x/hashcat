@@ -577,9 +577,7 @@ DECLSPEC void m08500m (LOCAL_AS u32 (*s_SPtrans)[64], LOCAL_AS u32 (*s_skb)[64],
 
     _des_crypt_encrypt (iv, data, Kc, Kd, s_SPtrans);
 
-    u32x z = 0;
-
-    COMPARE_M_SIMD (iv[0], iv[1], z, z);
+    COMPARE_M_SIMD_2 (iv[0], iv[1]);
   }
 }
 
@@ -652,9 +650,7 @@ DECLSPEC void m08500s (LOCAL_AS u32 (*s_SPtrans)[64], LOCAL_AS u32 (*s_skb)[64],
 
     _des_crypt_encrypt (iv, data, Kc, Kd, s_SPtrans);
 
-    u32x z = 0;
-
-    COMPARE_S_SIMD (iv[0], iv[1], z, z);
+    COMPARE_S_SIMD_2 (iv[0], iv[1]);
   }
 }
 
