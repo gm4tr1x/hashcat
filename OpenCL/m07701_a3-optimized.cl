@@ -259,11 +259,9 @@ DECLSPEC void m07701m (u32 *w0, u32 *w1, u32 *w2, u32 *w3, const u32 pw_len, KER
     md5_transform (t + 0, t + 4, t + 8, t + 12, digest);
 
     const u32 r0 = digest[0] ^ digest[2];
-    const u32 r1 = 0;
-    const u32 r2 = 0;
-    const u32 r3 = 0;
 
-    COMPARE_M_SIMD (r0, r1, r2, r3);
+    // with multi-hash mode is faster _1
+    COMPARE_M_SIMD_1 (r0);
   }
 }
 

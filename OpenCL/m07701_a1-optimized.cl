@@ -342,11 +342,8 @@ KERNEL_FQ void m07701_m04 (KERN_ATTR_BASIC ())
     md5_transform (t + 0, t + 4, t + 8, t + 12, digest);
 
     const u32 r0 = digest[0] ^ digest[2];
-    const u32 r1 = 0;
-    const u32 r2 = 0;
-    const u32 r3 = 0;
 
-    COMPARE_M_SIMD (r0, r1, r2, r3);
+    COMPARE_M_SIMD_1 (r0);
   }
 }
 
@@ -561,11 +558,8 @@ KERNEL_FQ void m07701_s04 (KERN_ATTR_BASIC ())
     md5_transform (t + 0, t + 4, t + 8, t + 12, digest);
 
     const u32 r0 = digest[0] ^ digest[2];
-    const u32 r1 = 0;
-    const u32 r2 = 0;
-    const u32 r3 = 0;
 
-    COMPARE_S_SIMD (r0, r1, r2, r3);
+    COMPARE_S_SIMD_1 (r0);
   }
 }
 
