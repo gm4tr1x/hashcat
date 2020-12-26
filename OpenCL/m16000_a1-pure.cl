@@ -658,9 +658,7 @@ KERNEL_FQ void m16000_mxx (KERN_ATTR_BASIC ())
     iv[0] &= 0xff7f7f7f;
     iv[1] &= 0xff7f7f7f;
 
-    u32 z = 0;
-
-    COMPARE_M_SIMD (iv[0], iv[1], z, z);
+    COMPARE_M_SIMD_2 (iv[0], iv[1]);
   }
 }
 
@@ -842,8 +840,6 @@ KERNEL_FQ void m16000_sxx (KERN_ATTR_BASIC ())
     iv[0] &= 0xff7f7f7f;
     iv[1] &= 0xff7f7f7f;
 
-    u32 z = 0;
-
-    COMPARE_S_SIMD (iv[0], iv[1], z, z);
+    COMPARE_S_SIMD_2 (iv[0], iv[1]);
   }
 }
