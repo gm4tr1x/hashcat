@@ -302,10 +302,8 @@ KERNEL_FQ void m07700_m04 (KERN_ATTR_RULES ())
 
     const u32 r0 = digest[0] ^ digest[2];
     const u32 r1 = digest[1] ^ digest[3];
-    const u32 r2 = 0;
-    const u32 r3 = 0;
 
-    COMPARE_M_SIMD (r0, r1, r2, r3);
+    COMPARE_M_SIMD_2 (r0, r1);
   }
 }
 
@@ -478,10 +476,8 @@ KERNEL_FQ void m07700_s04 (KERN_ATTR_RULES ())
 
     const u32 r0 = digest[0] ^ digest[2];
     const u32 r1 = digest[1] ^ digest[3];
-    const u32 r2 = 0;
-    const u32 r3 = 0;
 
-    COMPARE_S_SIMD (r0, r1, r2, r3);
+    COMPARE_S_SIMD_2 (r0, r1);
   }
 }
 
