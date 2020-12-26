@@ -1957,6 +1957,36 @@ DECLSPEC int hash_comp (const u32 *d1, GLOBAL_AS const u32 *d2)
   return (0);
 }
 
+DECLSPEC int hash_comp_1 (const u32 *d1, GLOBAL_AS const u32 *d2)
+{
+  if (d1[0] > d2[DGST_R0]) return ( 1);
+  if (d1[0] < d2[DGST_R0]) return (-1);
+
+  return (0);
+}
+
+DECLSPEC int hash_comp_2 (const u32 *d1, GLOBAL_AS const u32 *d2)
+{
+  if (d1[1] > d2[DGST_R1]) return ( 1);
+  if (d1[1] < d2[DGST_R1]) return (-1);
+  if (d1[0] > d2[DGST_R0]) return ( 1);
+  if (d1[0] < d2[DGST_R0]) return (-1);
+
+  return (0);
+}
+
+DECLSPEC int hash_comp_3 (const u32 *d1, GLOBAL_AS const u32 *d2)
+{
+  if (d1[2] > d2[DGST_R2]) return ( 1);
+  if (d1[2] < d2[DGST_R2]) return (-1);
+  if (d1[1] > d2[DGST_R1]) return ( 1);
+  if (d1[1] < d2[DGST_R1]) return (-1);
+  if (d1[0] > d2[DGST_R0]) return ( 1);
+  if (d1[0] < d2[DGST_R0]) return (-1);
+
+  return (0);
+}
+
 DECLSPEC int find_hash (const u32 *digest, const u32 digests_cnt, GLOBAL_AS const digest_t *digests_buf)
 {
   for (u32 l = 0, r = digests_cnt; r; r >>= 1)
@@ -1979,6 +2009,76 @@ DECLSPEC int find_hash (const u32 *digest, const u32 digests_cnt, GLOBAL_AS cons
 
   return (-1);
 }
+
+DECLSPEC int find_hash_1 (const u32 *digest, const u32 digests_cnt, GLOBAL_AS const digest_t *digests_buf)
+{
+  for (u32 l = 0, r = digests_cnt; r; r >>= 1)
+  {
+    const u32 m = r >> 1;
+
+    const u32 c = l + m;
+
+    const int cmp = hash_comp_1 (digest, digests_buf[c].digest_buf);
+
+    if (cmp > 0)
+    {
+      l += m + 1;
+
+      r--;
+    }
+
+    if (cmp == 0) return (c);
+  }
+
+  return (-1);
+}
+
+DECLSPEC int find_hash_2 (const u32 *digest, const u32 digests_cnt, GLOBAL_AS const digest_t *digests_buf)
+{
+  for (u32 l = 0, r = digests_cnt; r; r >>= 1)
+  {
+    const u32 m = r >> 1;
+
+    const u32 c = l + m;
+
+    const int cmp = hash_comp_2 (digest, digests_buf[c].digest_buf);
+
+    if (cmp > 0)
+    {
+      l += m + 1;
+
+      r--;
+    }
+
+    if (cmp == 0) return (c);
+  }
+
+  return (-1);
+}
+
+DECLSPEC int find_hash_3 (const u32 *digest, const u32 digests_cnt, GLOBAL_AS const digest_t *digests_buf)
+{
+  for (u32 l = 0, r = digests_cnt; r; r >>= 1)
+  {
+    const u32 m = r >> 1;
+
+    const u32 c = l + m;
+
+    const int cmp = hash_comp_3 (digest, digests_buf[c].digest_buf);
+
+    if (cmp > 0)
+    {
+      l += m + 1;
+
+      r--;
+    }
+
+    if (cmp == 0) return (c);
+  }
+
+  return (-1);
+}
+
 #endif
 
 DECLSPEC int pkcs_padding_bs8 (const u32 *data_buf, const int data_len)
@@ -2143,6 +2243,39 @@ DECLSPEC u32 check (const u32 *digest, GLOBAL_AS const u32 *bitmap_s1_a, GLOBAL_
 
   return (1);
 }
+
+DECLSPEC u32 check_1 (const u32 *digest, GLOBAL_AS const u32 *bitmap_s1_a, GLOBAL_AS const u32 *bitmap_s2_a, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2)
+{
+  if (check_bitmap (bitmap_s1_a, bitmap_mask, bitmap_shift1, digest[0]) == 0) return (0);
+  if (check_bitmap (bitmap_s2_a, bitmap_mask, bitmap_shift2, digest[0]) == 0) return (0);
+
+  return (1);
+}
+
+DECLSPEC u32 check_2 (const u32 *digest, GLOBAL_AS const u32 *bitmap_s1_a, GLOBAL_AS const u32 *bitmap_s1_b, GLOBAL_AS const u32 *bitmap_s2_a, GLOBAL_AS const u32 *bitmap_s2_b, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2)
+{
+  if (check_bitmap (bitmap_s1_a, bitmap_mask, bitmap_shift1, digest[0]) == 0) return (0);
+  if (check_bitmap (bitmap_s1_b, bitmap_mask, bitmap_shift1, digest[1]) == 0) return (0);
+
+  if (check_bitmap (bitmap_s2_a, bitmap_mask, bitmap_shift2, digest[0]) == 0) return (0);
+  if (check_bitmap (bitmap_s2_b, bitmap_mask, bitmap_shift2, digest[1]) == 0) return (0);
+
+  return (1);
+}
+
+DECLSPEC u32 check_3 (const u32 *digest, GLOBAL_AS const u32 *bitmap_s1_a, GLOBAL_AS const u32 *bitmap_s1_b, GLOBAL_AS const u32 *bitmap_s1_c, GLOBAL_AS const u32 *bitmap_s2_a, GLOBAL_AS const u32 *bitmap_s2_b, GLOBAL_AS const u32 *bitmap_s2_c, const u32 bitmap_mask, const u32 bitmap_shift1, const u32 bitmap_shift2)
+{
+  if (check_bitmap (bitmap_s1_a, bitmap_mask, bitmap_shift1, digest[0]) == 0) return (0);
+  if (check_bitmap (bitmap_s1_b, bitmap_mask, bitmap_shift1, digest[1]) == 0) return (0);
+  if (check_bitmap (bitmap_s1_c, bitmap_mask, bitmap_shift1, digest[2]) == 0) return (0);
+
+  if (check_bitmap (bitmap_s2_a, bitmap_mask, bitmap_shift2, digest[0]) == 0) return (0);
+  if (check_bitmap (bitmap_s2_b, bitmap_mask, bitmap_shift2, digest[1]) == 0) return (0);
+  if (check_bitmap (bitmap_s2_c, bitmap_mask, bitmap_shift2, digest[2]) == 0) return (0);
+
+  return (1);
+}
+
 
 DECLSPEC void mark_hash (GLOBAL_AS plain_t *plains_buf, GLOBAL_AS u32 *d_result, const u32 salt_pos, const u32 digests_cnt, const u32 digest_pos, const u32 hash_pos, const u64 gid, const u32 il_pos, const u32 extra1, const u32 extra2)
 {
