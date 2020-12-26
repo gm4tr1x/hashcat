@@ -189,9 +189,7 @@ DECLSPEC void m03100m (SHM_TYPE u32 (*s_SPtrans)[64], SHM_TYPE u32 (*s_skb)[64],
      * cmp
      */
 
-    u32x z = 0;
-
-    COMPARE_M_SIMD (iv[0], iv[1], z, z);
+    COMPARE_M_SIMD_2 (iv[0], iv[1]);
   }
 }
 
@@ -382,9 +380,7 @@ DECLSPEC void m03100s (SHM_TYPE u32 (*s_SPtrans)[64], SHM_TYPE u32 (*s_skb)[64],
      * cmp
      */
 
-    u32x z = 0;
-
-    COMPARE_S_SIMD (iv[0], iv[1], z, z);
+    COMPARE_S_SIMD_2 (iv[0], iv[1]);
   }
 }
 

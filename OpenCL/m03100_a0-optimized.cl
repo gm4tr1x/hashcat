@@ -235,9 +235,7 @@ KERNEL_FQ void m03100_m04 (KERN_ATTR_RULES ())
      * cmp
      */
 
-    u32x z = 0;
-
-    COMPARE_M_SIMD (iv[0], iv[1], z, z);
+    COMPARE_M_SIMD_2 (iv[0], iv[1]);
   }
 }
 
@@ -479,9 +477,7 @@ KERNEL_FQ void m03100_s04 (KERN_ATTR_RULES ())
      * cmp
      */
 
-    u32x z = 0;
-
-    COMPARE_S_SIMD (iv[0], iv[1], z, z);
+    COMPARE_S_SIMD_2 (iv[0], iv[1]);
   }
 }
 
