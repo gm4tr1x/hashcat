@@ -267,9 +267,7 @@ KERNEL_FQ void m11500_m04 (KERN_ATTR_BASIC ())
 
     u32x a = crc32 (w, pw_len, iv);
 
-    u32x z = 0;
-
-    COMPARE_M_SIMD (a, z, z, z);
+    COMPARE_M_SIMD_1 (a);
   }
 }
 
@@ -427,9 +425,7 @@ KERNEL_FQ void m11500_s04 (KERN_ATTR_BASIC ())
 
     u32x a = crc32 (w, pw_len, iv);
 
-    u32x z = 0;
-
-    COMPARE_S_SIMD (a, z, z, z);
+    COMPARE_S_SIMD_1 (a);
   }
 }
 

@@ -185,9 +185,7 @@ DECLSPEC void m11500m (u32 *w, const u32 pw_len, KERN_ATTR_BASIC ())
 
     u32x a = crc32 (w_t, pw_len, iv);
 
-    u32x z = 0;
-
-    COMPARE_M_SIMD (a, z, z, z);
+    COMPARE_M_SIMD_1 (a);
   }
 }
 
@@ -255,9 +253,7 @@ DECLSPEC void m11500s (u32 *w, const u32 pw_len, KERN_ATTR_BASIC ())
 
     u32x a = crc32 (w_t, pw_len, iv);
 
-    u32x z = 0;
-
-    COMPARE_S_SIMD (a, z, z, z);
+    COMPARE_S_SIMD_1 (a);
   }
 }
 
