@@ -614,9 +614,7 @@ DECLSPEC void m14100m (LOCAL_AS u32 (*s_SPtrans)[64], LOCAL_AS u32 (*s_skb)[64],
 
     _des_crypt_encrypt (iv, p2, Ke, Kf, s_SPtrans);
 
-    u32x z = 0;
-
-    COMPARE_M_SIMD (iv[0], iv[1], z, z);
+    COMPARE_M_SIMD_2 (iv[0], iv[1]);
   }
 }
 
@@ -730,9 +728,7 @@ DECLSPEC void m14100s (LOCAL_AS u32 (*s_SPtrans)[64], LOCAL_AS u32 (*s_skb)[64],
 
     /* Third Pass was precomputed */
 
-    u32x z = 0;
-
-    COMPARE_S_SIMD (p1[0], p1[1], z, z);
+    COMPARE_S_SIMD_2 (p1[0], p1[1]);
   }
 }
 

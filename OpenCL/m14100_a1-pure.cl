@@ -708,9 +708,7 @@ KERNEL_FQ void m14100_mxx (KERN_ATTR_BASIC ())
 
     _des_crypt_encrypt (iv, p2, Ke, Kf, s_SPtrans);
 
-    u32 z = 0;
-
-    COMPARE_M_SIMD (iv[0], iv[1], z, z);
+    COMPARE_M_SIMD_2 (iv[0], iv[1]);
   }
 }
 
@@ -903,8 +901,6 @@ KERNEL_FQ void m14100_sxx (KERN_ATTR_BASIC ())
 
     _des_crypt_encrypt (iv, p2, Ke, Kf, s_SPtrans);
 
-    u32 z = 0;
-
-    COMPARE_S_SIMD (iv[0], iv[1], z, z);
+    COMPARE_S_SIMD_2 (iv[0], iv[1]);
   }
 }
