@@ -117,9 +117,7 @@ DECLSPEC void m10100m (u32 *w, const u32 pw_len, KERN_ATTR_VECTOR ())
     const u32x a = l32_from_64 (v);
     const u32x b = h32_from_64 (v);
 
-    const u32x z = 0;
-
-    COMPARE_M_SIMD (a, b, z, z);
+    COMPARE_M_SIMD_2 (a, b);
   }
 }
 
@@ -223,9 +221,7 @@ DECLSPEC void m10100s (u32 *w, const u32 pw_len, KERN_ATTR_VECTOR ())
     const u32x a = l32_from_64 (v);
     const u32x b = h32_from_64 (v);
 
-    const u32x z = 0;
-
-    COMPARE_S_SIMD (a, b, z, z);
+    COMPARE_S_SIMD_2 (a, b);
   }
 }
 
