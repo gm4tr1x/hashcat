@@ -13,7 +13,7 @@
 #endif
 
 #define COMPARE_S "inc_comp_single_bs.cl"
-#define COMPARE_M "inc_comp_multi_bs.cl"
+#define COMPARE_M "inc_comp_multi_bs_2.cl"
 
 #ifdef IS_NV
 #define KXX_DECL
@@ -2245,8 +2245,6 @@ KERNEL_FQ void m01500_mxx (KERN_ATTR_BITSLICE ())
 
         const u32 r0 = search[0];
         const u32 r1 = search[1];
-        const u32 r2 = 0;
-        const u32 r3 = 0;
 
         #ifdef KERNEL_STATIC
         #include COMPARE_M
@@ -2277,10 +2275,6 @@ KERNEL_FQ void m01500_mxx (KERN_ATTR_BITSLICE ())
       {
         const u32 r0 = out0[31 - slice];
         const u32 r1 = out1[31 - slice];
-        const u32 r2 = 0;
-        #ifdef KERNEL_STATIC
-        const u32 r3 = 0;
-        #endif
 
         #include COMPARE_M
       }
