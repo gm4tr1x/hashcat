@@ -1,5 +1,11 @@
 * changes v6.2.3 -> v6.2.x
 
+##
+## Algorithms
+##
+
+- Added hash-mode: SNMPv3 HMAC-SHA1-96
+
 * changes v6.2.2 -> v6.2.3
 
 ##
